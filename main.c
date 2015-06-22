@@ -49,36 +49,36 @@ int main(int argc, char **argv){
    int newfunction = 0;
    
    if(!al_init()) {
-      al_show_native_message_box(display, "Error", "Error", "Failed to initialize allegro!", 
+      al_show_native_message_box(display, "Error", "Error", "No se pudo inicializar allegro!", 
                                  NULL, ALLEGRO_MESSAGEBOX_ERROR);
       return 0;
    }
    
     if(!al_install_keyboard()) {
-   fprintf(stderr, "failed to initialize the keyboard!\n");
+   fprintf(stderr, "No se pudo inicializar el teclado!\n");
     return -1;
  }
  
  if(!al_init_image_addon()) {       //IMPORTANTÍSIMO!!!!!!!!!!
-   al_show_native_message_box(display, "Error", "Error", "Failed to initialize al_init_image_addon!", 
+   al_show_native_message_box(display, "Error", "Error", "No se pudo inicializar al_init_image_addon!", 
                               NULL, ALLEGRO_MESSAGEBOX_ERROR);
     return 0;
  }
  
    timer = al_create_timer(1.0 / FPS);
    if(!timer) {
-      fprintf(stderr, "failed to create timer!\n");
+      fprintf(stderr, "No se pudo crear el timer!\n");
       return -1;
    }
    
    if(!al_install_mouse()) {
-      fprintf(stderr, "failed to initialize the mouse!\n");
+      fprintf(stderr, "No se pudo inicializar el mouse!\n");
       return -1;
    }
    
    display = al_create_display(SCREEN_W,SCREEN_H);
    if(!display) {
-      al_show_native_message_box(display, "Error", "Error", "Failed to initialize display!", 
+      al_show_native_message_box(display, "Error", "Error", "No se pudo inicializar el display!", 
                                  NULL, ALLEGRO_MESSAGEBOX_ERROR);
       return 0;
    }
@@ -91,7 +91,7 @@ int main(int argc, char **argv){
    blankspace = al_load_bitmap("blankspace.png");
    
    if(!estado1 || !nuevoestado || !nuevafuncion || !nuevatransicion || !makefile) {
-      fprintf(stderr, "failed to create bouncer bitmap!\n");
+      fprintf(stderr, "No se pudieron crear los bitmaps!\n");
       al_destroy_display(display);
       al_destroy_timer(timer);
       return -1;
