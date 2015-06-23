@@ -11,21 +11,17 @@
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_primitives.h>
  
+#include "arrdinamico.h"
+
 const float FPS = 60;
 const int SCREEN_W = 1000;
 const int SCREEN_H = 700;
 const int IMG_SIZE = 92;
 
-typedef struct estado miestado;
-struct estado{
-    float estado_x;
-    float estado_y;
-    ALLEGRO_BITMAP *estadoimg;
-    miestado *next;
-};
 
 void agregarestado(int tempestado_x,int tempestado_y, miestado* lista);
-void borrarestado(void);
+void borrarestado(int num_of_block_to_del,miestado *lista);
+miestado* leerestado(int num_of_block_to_read, miestado *lista);
 
 int main(int argc, char **argv){
  
@@ -213,9 +209,6 @@ int main(int argc, char **argv){
    }
 
    
-   
-   
-
    al_destroy_bitmap(estado1);
    al_destroy_timer(timer);
    al_destroy_display(display);
@@ -231,6 +224,7 @@ void agregarestado(int tempestado_x,int tempestado_y, miestado* lista) //lista e
     miestado* recorrer = lista;
     if(!lista->next)
     {
+    lista->cont=0;
     lista->next=temp;
     (temp->estado_x)=tempestado_x;
     (temp->estado_y)=tempestado_y;
@@ -239,11 +233,30 @@ void agregarestado(int tempestado_x,int tempestado_y, miestado* lista) //lista e
     }else {
     for(i=0;recorrer->next!=NULL;recorrer=recorrer->next) //el for solo recorre la lista
     {
+        i++;
     }
+    temp->cont=i;
     recorrer->next=temp;
     (temp->estado_x)=tempestado_x;
     (temp->estado_y)=tempestado_y;
     (temp->estadoimg)=NULL;
     temp->next=NULL;
   }
+}
+
+void borrarestado(int num_of_block_to_del,miestado *lista){
+miestado *recorrer=lista;
+miestado *bup=lista;
+for (;(recorrer->cont)<(num_of_block_to_del-1);recorrer=recorrer->next){
+}
+bup=recorrer;
+recorrer=recorrer->next;
+bup->next=recorrer->next;
+free(recorrer);
+}
+
+miestado* leerestado(int num_of_block_to_read, miestado *lista){
+miestado *recorrer=lista;
+for(;(recorrer->cont)<(num_of_block_to_read);recorrer=recorrer->next);
+return recorrer;
 }
