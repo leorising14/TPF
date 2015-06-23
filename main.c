@@ -14,12 +14,13 @@
 const float FPS = 60;
 const int SCREEN_W = 1000;
 const int SCREEN_H = 700;
-const int BOUNCER_SIZE = 92;
+const int IMG_SIZE = 92;
 
 typedef struct estado miestado;
 struct estado{
     float estado_x;
     float estado_y;
+    ALLEGRO_BITMAP *estadoimg;
     miestado *next;
 };
 
@@ -37,8 +38,8 @@ int main(int argc, char **argv){
    ALLEGRO_BITMAP *blankspace = NULL;
    ALLEGRO_EVENT_QUEUE *event_queue = NULL;
    ALLEGRO_TIMER *timer = NULL;
-   float estado1_x = SCREEN_W / 2.0 - BOUNCER_SIZE / 2.0;
-   float estado1_y = SCREEN_H / 2.0 - BOUNCER_SIZE / 2.0;//lo hago aparecer en el medio
+   float estado1_x = SCREEN_W / 2.0 - IMG_SIZE / 2.0;
+   float estado1_y = SCREEN_H / 2.0 - IMG_SIZE / 2.0;//lo hago aparecer en el medio
    float bouncer_dx = -4.0, bouncer_dy = 4.0; //velocidad de la pelotita
    bool key[4] = { false, false, false, false };
    bool redraw = true;
@@ -47,6 +48,16 @@ int main(int argc, char **argv){
    int newstate = 0;
    int newtransicion = 0;
    int newfunction = 0;
+   
+   int var=0;
+   miestado* listadeestados;
+   miestado newestado1;
+   newestado1.estado_x = SCREEN_W / 2.0 - IMG_SIZE / 2.0;
+   newestado1.estado_y = SCREEN_H / 2.0 - IMG_SIZE / 2.0;
+
+   listadeestados = &newestado1;
+   
+   
    
    if(!al_init()) {
       al_show_native_message_box(display, "Error", "Error", "No se pudo inicializar allegro!", 
@@ -59,10 +70,10 @@ int main(int argc, char **argv){
     return -1;
  }
  
- if(!al_init_image_addon()) {       //IMPORTANTÍSIMO!!!!!!!!!!
-   al_show_native_message_box(display, "Error", "Error", "No se pudo inicializar al_init_image_addon!", 
+   if(!al_init_image_addon()) {       //IMPORTANTÍSIMO!!!!!!!!!!
+        al_show_native_message_box(display, "Error", "Error", "No se pudo inicializar al_init_image_addon!", 
                               NULL, ALLEGRO_MESSAGEBOX_ERROR);
-    return 0;
+     return 0;
  }
  
    timer = al_create_timer(1.0 / FPS);
@@ -83,20 +94,26 @@ int main(int argc, char **argv){
       return 0;
    }
  
-   estado1 = al_load_bitmap("estado1.png");
+  // newestado1.estadoimg = al_load_bitmap("estado1.png");
    nuevoestado = al_load_bitmap("nuevoestado.png");
    nuevafuncion = al_load_bitmap("nuevafuncion.png");
    nuevatransicion = al_load_bitmap("nuevatransicion.png");
    makefile = al_load_bitmap("makefile.png");
    blankspace = al_load_bitmap("blankspace.png");
    
-   if(!estado1 || !nuevoestado || !nuevafuncion || !nuevatransicion || !makefile) {
+   if(!nuevoestado || !nuevafuncion || !nuevatransicion || !makefile) {
       fprintf(stderr, "No se pudieron crear los bitmaps!\n");
       al_destroy_display(display);
       al_destroy_timer(timer);
       return -1;
    }
-
+  
+   //if(!newestado1.estadoimg) {
+    //  fprintf(stderr, "No se pudieron crear los bitmaps!\n");
+    //  al_destroy_display(display);
+    //  al_destroy_timer(timer);
+    //  return -1;
+  // }
    
    al_set_target_bitmap(al_get_backbuffer(display));
    
@@ -136,7 +153,7 @@ int main(int argc, char **argv){
          break;
       }
       else if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
-       if(((ev.mouse.x)<(estado1_x+92)) && (((ev.mouse.y)<(estado1_y+92))) && ((estado1_x)<ev.mouse.x) && ((estado1_y)<ev.mouse.y)){
+       if(((ev.mouse.x)<(newestado1.estado_x+92)) && (((ev.mouse.y)<(newestado1.estado_y+92))) && ((newestado1.estado_x)<ev.mouse.x) && ((newestado1.estado_y)<ev.mouse.y)){
             mousestate = 1;
        }
        
@@ -156,8 +173,8 @@ int main(int argc, char **argv){
           mousestate = 0;
       }else if((mousestate == 1)){
           //printf("El mouse esta en: %d\n",ev.mouse.x);        //Para pruebas
-          estado1_x = (ev.mouse.x)-46;
-          estado1_y = (ev.mouse.y)-46;
+          newestado1.estado_x = (ev.mouse.x)-46;
+          newestado1.estado_y = (ev.mouse.y)-46;
       }else if(ev.type == ALLEGRO_EVENT_KEY_UP){
           switch(ev.keyboard.keycode) {
             case ALLEGRO_KEY_ESCAPE:
@@ -166,6 +183,8 @@ int main(int argc, char **argv){
           }
       }else if((newstate == 1)){
           printf("Agregue estado\n");
+          var=1;
+          newestado1.estadoimg = al_load_bitmap("estado1.png");
           al_draw_bitmap(blankspace, 725, 250, 0);
 
       }else if((newtransicion == 1)){
@@ -178,8 +197,10 @@ int main(int argc, char **argv){
          redraw = false; //cando ya dibuje, espero de nuevo al timer
  
          al_clear_to_color(al_map_rgb(255,255,255));
- 
-         al_draw_bitmap(estado1, estado1_x, estado1_y, 0);
+         if(var==1)
+         {
+         al_draw_bitmap(newestado1.estadoimg, newestado1.estado_x, newestado1.estado_y, 0);
+         }
          al_draw_bitmap(nuevoestado, 725, 150, 0);
          al_draw_bitmap(nuevatransicion, 725, 250, 0);
          al_draw_bitmap(nuevafuncion, 725, 350, 0);
@@ -213,6 +234,7 @@ void agregarestado(int tempestado_x,int tempestado_y, miestado* lista) //lista e
     lista->next=temp;
     (temp->estado_x)=tempestado_x;
     (temp->estado_y)=tempestado_y;
+    (temp->estadoimg)=NULL;
     temp->next=NULL;
     }else {
     for(i=0;recorrer->next!=NULL;recorrer=recorrer->next) //el for solo recorre la lista
@@ -221,6 +243,7 @@ void agregarestado(int tempestado_x,int tempestado_y, miestado* lista) //lista e
     recorrer->next=temp;
     (temp->estado_x)=tempestado_x;
     (temp->estado_y)=tempestado_y;
+    (temp->estadoimg)=NULL;
     temp->next=NULL;
   }
 }
