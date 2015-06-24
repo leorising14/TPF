@@ -17,5 +17,10 @@ struct estado{
     miestado *next;
 };
 
+void agregarestado(miestado** p2state);
+void borrarestado(miestado** p2state);
+miestado* leerestado(int numofstate, miestado *p2state);
+miestado* ultimoestado(miestado *p2state);
+
 #endif	/* ARRDINAMICO_H */
 

@@ -19,10 +19,7 @@ const int SCREEN_H = 700;
 const int IMG_SIZE = 92;
 
 
-void agregarestado(miestado** p2state);
-void borrarestado(miestado** p2state);
-miestado* leerestado(int numofstate, miestado *p2state);
-miestado* ultimoestado(miestado *p2state);
+
 
 int main(int argc, char **argv){
  
@@ -234,74 +231,5 @@ int main(int argc, char **argv){
    al_destroy_event_queue(event_queue);
  
    return 0;
-}
-
-void agregarestado(miestado** p2state) //lista es el  puntero al primer elemento, NO SE PUEDE TOCAR
-{
-    if((*p2state) == NULL)
-    {
-        (*p2state) = calloc(1, sizeof(miestado));
-        ((*p2state) -> next) = NULL;
-    }else
-    {
-        agregarestado(&((*p2state)->next));
-    }
-}
-
-void borrarestado(miestado** p2state)
-{
-    if((*p2state) == NULL)
-    {
-        printf("Actualmente no hay estados!");
-        return;
-    }
-    
-    if(((*p2state)->next) == NULL)
-    {
-        free(*p2state);
-        *p2state = NULL;
-        return;
-    }
-    
-    if((((*p2state)->next)->next) == NULL)
-    {
-        free((*p2state)->next);
-        ((*p2state)->next) = NULL;
-    }else
-    {
-        borrarestado(&((*p2state)->next));
-    }
-}
-
-miestado* leerestado(int numofstate, miestado *p2state)
-{
-    if(p2state == NULL)
-    {
-        printf("El estado no existe!");
-        return NULL;
-    }
-    if(numofstate == 0)
-    {
-        return p2state;
-    }else
-    {
-        return leerestado(numofstate-1,(p2state->next));
-    }
-}
-
-miestado* ultimoestado(miestado *p2state)
-{
-    if(p2state == NULL)
-    {
-        return NULL;
-        printf("El estado no existe!");
-    }
-    if((p2state->next) == NULL)
-    {
-        return p2state;
-    }else
-    {
-        return ultimoestado(p2state -> next);
-    }
 }
 
