@@ -48,11 +48,12 @@ int main(int argc, char **argv){
    int var=0;
    int n=0;
    miestado* listadeestados;
-   miestado newestado1;
-   newestado1.estado_x = SCREEN_W / 2.0 - IMG_SIZE / 2.0;
-   newestado1.estado_y = SCREEN_H / 2.0 - IMG_SIZE / 2.0;
+   listadeestados = NULL;
+   //miestado newestado1;
+   //newestado1.estado_x = SCREEN_W / 2.0 - IMG_SIZE / 2.0;
+   //newestado1.estado_y = SCREEN_H / 2.0 - IMG_SIZE / 2.0;
 
-   listadeestados = &newestado1;
+   //listadeestados = &newestado1;
    
    
    
@@ -186,7 +187,11 @@ int main(int argc, char **argv){
       }else if((newstate == 1)){
           printf("Agregue estado\n");
           var=1;
-          newestado1.estadoimg = al_load_bitmap("estado1.png");
+          agregarestado(SCREEN_W / 2.0 - IMG_SIZE / 2.0, SCREEN_H / 2.0 - IMG_SIZE / 2.0,listadeestados);
+          for(n=0;n<1;n++){
+             leerestado(n,listadeestados)->estadoimg = al_load_bitmap("estado1.png");      
+          }
+
           al_draw_bitmap(blankspace, 725, 250, 0);
           newstate=0;
       }else if((newtransicion == 1)){
@@ -201,7 +206,7 @@ int main(int argc, char **argv){
          al_clear_to_color(al_map_rgb(255,255,255));
          if(var==1)
          {
-             for(n=0;n<2;n++){
+             for(n=0;n<1;n++){
                 al_draw_bitmap(leerestado(n,listadeestados)->estadoimg, leerestado(n,listadeestados)->estado_x, leerestado(n,listadeestados)->estado_y, 0);
              } 
          }
@@ -236,10 +241,10 @@ void agregarestado(int tempestado_x,int tempestado_y, miestado* lista) //lista e
     lista->next=temp;
     (temp->estado_x)=tempestado_x;
     (temp->estado_y)=tempestado_y;
-    (temp->estadoimg)=NULL;
+    (temp->estadoimg)=al_load_bitmap("estado1.png");
     temp->next=NULL;
     }else {
-    for(i=0;recorrer->next!=NULL;recorrer=recorrer->next) //el for solo recorre la lista
+    for(i=0;(recorrer->next)!=NULL;recorrer=(recorrer->next)) //el for solo recorre la lista
     {
         i++;
     }
@@ -247,7 +252,7 @@ void agregarestado(int tempestado_x,int tempestado_y, miestado* lista) //lista e
     recorrer->next=temp;
     (temp->estado_x)=tempestado_x;
     (temp->estado_y)=tempestado_y;
-    (temp->estadoimg)=NULL;
+    (temp->estadoimg)=al_load_bitmap("estado1.png");
     temp->next=NULL;
   }
 }
@@ -263,9 +268,9 @@ bup->next=recorrer->next;
 free(recorrer);
 }
 
-miestado* leerestado(int num_of_block_to_read, miestado *lista){
-miestado *recorrer=lista;
-for(;(recorrer->cont)<(num_of_block_to_read);recorrer=recorrer->next);
-return recorrer;
+miestado* leerestado(int num_of_block_to_read, miestado *list){
+miestado *recorrer1=list;
+for(;(recorrer1->cont)<(num_of_block_to_read);recorrer1=(recorrer1->next));
+return recorrer1;
 }
 
