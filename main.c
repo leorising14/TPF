@@ -19,8 +19,6 @@ const int SCREEN_H = 700;
 const int IMG_SIZE = 92;
 
 
-
-
 int main(int argc, char **argv){
  
    ALLEGRO_DISPLAY *display = NULL;
@@ -34,7 +32,6 @@ int main(int argc, char **argv){
    ALLEGRO_TIMER *timer = NULL;
    float estado1_x = SCREEN_W / 2.0 - IMG_SIZE / 2.0;
    float estado1_y = SCREEN_H / 2.0 - IMG_SIZE / 2.0;//lo hago aparecer en el medio
-   float bouncer_dx = -4.0, bouncer_dy = 4.0; //velocidad de la pelotita
    bool key[4] = { false, false, false, false };
    bool redraw = true;
    bool doexit = false;
@@ -151,7 +148,7 @@ int main(int argc, char **argv){
       }
       else if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
        
-          for(n=0;n<contadordeestados;n++){
+          for(n=1;n<contadordeestados;n++){
        if(((ev.mouse.x)<(leerestado(n,listadeestados)->estado_x+92)) && (((ev.mouse.y)<(leerestado(n,listadeestados)->estado_y+92))) 
                && ((leerestado(n,listadeestados)->estado_x)<ev.mouse.x) && ((leerestado(n,listadeestados)->estado_y)<ev.mouse.y)){
             mousestate = 1;
@@ -173,7 +170,7 @@ int main(int argc, char **argv){
           mousestate = 0;
       }else if((mousestate == 1)){
           //printf("El mouse esta en: %d\n",ev.mouse.x);        //Para pruebas
-          for(n=0;n<contadordeestados;n++){
+          for(n=1;n<contadordeestados;n++){
           leerestado(n,listadeestados)->estado_x = (ev.mouse.x)-46;
           leerestado(n,listadeestados)->estado_y = (ev.mouse.y)-46;
           }
@@ -189,11 +186,13 @@ int main(int argc, char **argv){
           contadordeestados++;
           agregarestado(&listadeestados);
           agregarestado(&listadeestados);
-          (leerestado(contadordeestados,listadeestados))->estado_x = (SCREEN_W / 2.0 - IMG_SIZE / 2.0);
-          (leerestado(contadordeestados,listadeestados))->estado_x = (SCREEN_H / 2.0 - IMG_SIZE / 2.0);
-          for(n=0;n<contadordeestados;n++){
-             leerestado(n,listadeestados)->estadoimg = al_load_bitmap("estado1.png");      
-          }
+          (leerestado(contadordeestados,listadeestados))->estado_x = SCREEN_W / 2.0 - IMG_SIZE / 2.0;
+          (leerestado(contadordeestados,listadeestados))->estado_y = SCREEN_H / 2.0 - IMG_SIZE / 2.0;
+          (leerestado(contadordeestados,listadeestados))->estadoimg = al_load_bitmap("estado1.png");
+          
+          //for(n=0;n<contadordeestados;n++){
+          //  leerestado(n,listadeestados)->estadoimg = al_load_bitmap("estado1.png");      
+         // }
 
           al_draw_bitmap(blankspace, 725, 250, 0);
           newstate=0;
@@ -209,7 +208,7 @@ int main(int argc, char **argv){
          al_clear_to_color(al_map_rgb(255,255,255));
          if(var==1)
          {
-             for(n=0;n<contadordeestados;n++){
+             for(n=1;n<contadordeestados;n++){
                 al_draw_bitmap(leerestado(n,listadeestados)->estadoimg, leerestado(n,listadeestados)->estado_x, leerestado(n,listadeestados)->estado_y, 0);
              } 
          }
