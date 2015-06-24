@@ -1,6 +1,6 @@
 /* 
  * File:   main.c
- * Author: Mercedes
+ * Author: Gabriel
  *
  * Created on 6 de junio de 2015, 17:23
  */
@@ -46,6 +46,7 @@ int main(int argc, char **argv){
    int newfunction = 0;
    
    int var=0;
+   int n=0;
    miestado* listadeestados;
    miestado newestado1;
    newestado1.estado_x = SCREEN_W / 2.0 - IMG_SIZE / 2.0;
@@ -149,10 +150,13 @@ int main(int argc, char **argv){
          break;
       }
       else if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
-       if(((ev.mouse.x)<(newestado1.estado_x+92)) && (((ev.mouse.y)<(newestado1.estado_y+92))) && ((newestado1.estado_x)<ev.mouse.x) && ((newestado1.estado_y)<ev.mouse.y)){
+       
+          for(n=0;n<1;n++){
+       if(((ev.mouse.x)<(leerestado(n,listadeestados)->estado_x+92)) && (((ev.mouse.y)<(leerestado(n,listadeestados)->estado_y+92))) 
+               && ((leerestado(n,listadeestados)->estado_x)<ev.mouse.x) && ((leerestado(n,listadeestados)->estado_y)<ev.mouse.y)){
             mousestate = 1;
        }
-       
+       }
        if(((ev.mouse.x)<(725+250)) && (((ev.mouse.y)<(150+54))) && ((725)<ev.mouse.x) && ((150)<ev.mouse.y)){
             newstate = 1;
        }
@@ -169,8 +173,10 @@ int main(int argc, char **argv){
           mousestate = 0;
       }else if((mousestate == 1)){
           //printf("El mouse esta en: %d\n",ev.mouse.x);        //Para pruebas
-          newestado1.estado_x = (ev.mouse.x)-46;
-          newestado1.estado_y = (ev.mouse.y)-46;
+          for(n=0;n<1;n++){
+          leerestado(n,listadeestados)->estado_x = (ev.mouse.x)-46;
+          leerestado(n,listadeestados)->estado_y = (ev.mouse.y)-46;
+          }
       }else if(ev.type == ALLEGRO_EVENT_KEY_UP){
           switch(ev.keyboard.keycode) {
             case ALLEGRO_KEY_ESCAPE:
@@ -182,7 +188,7 @@ int main(int argc, char **argv){
           var=1;
           newestado1.estadoimg = al_load_bitmap("estado1.png");
           al_draw_bitmap(blankspace, 725, 250, 0);
-
+          newstate=0;
       }else if((newtransicion == 1)){
           printf("Aregue transicion\n");
       }else if((newfunction == 1)){
@@ -195,7 +201,9 @@ int main(int argc, char **argv){
          al_clear_to_color(al_map_rgb(255,255,255));
          if(var==1)
          {
-         al_draw_bitmap(newestado1.estadoimg, newestado1.estado_x, newestado1.estado_y, 0);
+             for(n=0;n<2;n++){
+                al_draw_bitmap(leerestado(n,listadeestados)->estadoimg, leerestado(n,listadeestados)->estado_x, leerestado(n,listadeestados)->estado_y, 0);
+             } 
          }
          al_draw_bitmap(nuevoestado, 725, 150, 0);
          al_draw_bitmap(nuevatransicion, 725, 250, 0);
@@ -260,3 +268,4 @@ miestado *recorrer=lista;
 for(;(recorrer->cont)<(num_of_block_to_read);recorrer=recorrer->next);
 return recorrer;
 }
+
