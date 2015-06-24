@@ -19,9 +19,10 @@ const int SCREEN_H = 700;
 const int IMG_SIZE = 92;
 
 
-void agregarestado(int tempestado_x,int tempestado_y, miestado* lista);
-void borrarestado(int num_of_block_to_del,miestado *lista);
-miestado* leerestado(int num_of_block_to_read, miestado *lista);
+void agregarestado(miestado** p2state);
+void borrarestado(miestado** p2state);
+miestado* leerestado(int numofstate, miestado *p2state);
+miestado* ultimoestado(miestado *p2state);
 
 int main(int argc, char **argv){
  
@@ -47,6 +48,7 @@ int main(int argc, char **argv){
    
    int var=0;
    int n=0;
+   int contadordeestados=0;
    miestado* listadeestados;
    listadeestados = NULL;
    //miestado newestado1;
@@ -152,7 +154,7 @@ int main(int argc, char **argv){
       }
       else if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
        
-          for(n=0;n<1;n++){
+          for(n=0;n<contadordeestados;n++){
        if(((ev.mouse.x)<(leerestado(n,listadeestados)->estado_x+92)) && (((ev.mouse.y)<(leerestado(n,listadeestados)->estado_y+92))) 
                && ((leerestado(n,listadeestados)->estado_x)<ev.mouse.x) && ((leerestado(n,listadeestados)->estado_y)<ev.mouse.y)){
             mousestate = 1;
@@ -174,7 +176,7 @@ int main(int argc, char **argv){
           mousestate = 0;
       }else if((mousestate == 1)){
           //printf("El mouse esta en: %d\n",ev.mouse.x);        //Para pruebas
-          for(n=0;n<1;n++){
+          for(n=0;n<contadordeestados;n++){
           leerestado(n,listadeestados)->estado_x = (ev.mouse.x)-46;
           leerestado(n,listadeestados)->estado_y = (ev.mouse.y)-46;
           }
@@ -187,8 +189,12 @@ int main(int argc, char **argv){
       }else if((newstate == 1)){
           printf("Agregue estado\n");
           var=1;
-          agregarestado(SCREEN_W / 2.0 - IMG_SIZE / 2.0, SCREEN_H / 2.0 - IMG_SIZE / 2.0,listadeestados);
-          for(n=0;n<1;n++){
+          contadordeestados++;
+          agregarestado(&listadeestados);
+          agregarestado(&listadeestados);
+          (leerestado(contadordeestados,listadeestados))->estado_x = (SCREEN_W / 2.0 - IMG_SIZE / 2.0);
+          (leerestado(contadordeestados,listadeestados))->estado_x = (SCREEN_H / 2.0 - IMG_SIZE / 2.0);
+          for(n=0;n<contadordeestados;n++){
              leerestado(n,listadeestados)->estadoimg = al_load_bitmap("estado1.png");      
           }
 
@@ -206,7 +212,7 @@ int main(int argc, char **argv){
          al_clear_to_color(al_map_rgb(255,255,255));
          if(var==1)
          {
-             for(n=0;n<1;n++){
+             for(n=0;n<contadordeestados;n++){
                 al_draw_bitmap(leerestado(n,listadeestados)->estadoimg, leerestado(n,listadeestados)->estado_x, leerestado(n,listadeestados)->estado_y, 0);
              } 
          }
@@ -230,47 +236,72 @@ int main(int argc, char **argv){
    return 0;
 }
 
-void agregarestado(int tempestado_x,int tempestado_y, miestado* lista) //lista es el  puntero al primer elemento, NO SE PUEDE TOCAR
+void agregarestado(miestado** p2state) //lista es el  puntero al primer elemento, NO SE PUEDE TOCAR
 {
-    int i;
-    miestado* temp=(miestado *) calloc(1,sizeof(miestado));
-    miestado* recorrer = lista;
-    if(!lista->next)
+    if((*p2state) == NULL)
     {
-    lista->cont=0;
-    lista->next=temp;
-    (temp->estado_x)=tempestado_x;
-    (temp->estado_y)=tempestado_y;
-    (temp->estadoimg)=al_load_bitmap("estado1.png");
-    temp->next=NULL;
-    }else {
-    for(i=0;(recorrer->next)!=NULL;recorrer=(recorrer->next)) //el for solo recorre la lista
+        (*p2state) = calloc(1, sizeof(miestado));
+        ((*p2state) -> next) = NULL;
+    }else
     {
-        i++;
+        agregarestado(&((*p2state)->next));
     }
-    temp->cont=i;
-    recorrer->next=temp;
-    (temp->estado_x)=tempestado_x;
-    (temp->estado_y)=tempestado_y;
-    (temp->estadoimg)=al_load_bitmap("estado1.png");
-    temp->next=NULL;
-  }
 }
 
-void borrarestado(int num_of_block_to_del,miestado *lista){
-miestado *recorrer=lista;
-miestado *bup=lista;
-for (;(recorrer->cont)<(num_of_block_to_del-1);recorrer=recorrer->next){
-}
-bup=recorrer;
-recorrer=recorrer->next;
-bup->next=recorrer->next;
-free(recorrer);
+void borrarestado(miestado** p2state)
+{
+    if((*p2state) == NULL)
+    {
+        printf("Actualmente no hay estados!");
+        return;
+    }
+    
+    if(((*p2state)->next) == NULL)
+    {
+        free(*p2state);
+        *p2state = NULL;
+        return;
+    }
+    
+    if((((*p2state)->next)->next) == NULL)
+    {
+        free((*p2state)->next);
+        ((*p2state)->next) = NULL;
+    }else
+    {
+        borrarestado(&((*p2state)->next));
+    }
 }
 
-miestado* leerestado(int num_of_block_to_read, miestado *list){
-miestado *recorrer1=list;
-for(;(recorrer1->cont)<(num_of_block_to_read);recorrer1=(recorrer1->next));
-return recorrer1;
+miestado* leerestado(int numofstate, miestado *p2state)
+{
+    if(p2state == NULL)
+    {
+        printf("El estado no existe!");
+        return NULL;
+    }
+    if(numofstate == 0)
+    {
+        return p2state;
+    }else
+    {
+        return leerestado(numofstate-1,(p2state->next));
+    }
+}
+
+miestado* ultimoestado(miestado *p2state)
+{
+    if(p2state == NULL)
+    {
+        return NULL;
+        printf("El estado no existe!");
+    }
+    if((p2state->next) == NULL)
+    {
+        return p2state;
+    }else
+    {
+        return ultimoestado(p2state -> next);
+    }
 }
 
