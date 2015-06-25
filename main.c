@@ -40,6 +40,7 @@ int main(int argc, char **argv){
    int var=0;
    int n=0;
    int contadordeestados=0;
+   int estadoactual=0;
    miestado* listadeestados = NULL;
 
    if(!al_init()) {
@@ -141,7 +142,8 @@ int main(int argc, char **argv){
             if(((ev.mouse.x)<(leerestado(n,listadeestados)->estado_x+92)) && (((ev.mouse.y)<(leerestado(n,listadeestados)->estado_y+92))) 
                && ((leerestado(n,listadeestados)->estado_x)<ev.mouse.x) && ((leerestado(n,listadeestados)->estado_y)<ev.mouse.y)){
                 mousestate = 1;
-       }
+                estadoactual = n;
+            }
        }
        if(((ev.mouse.x)<(725+250)) && (((ev.mouse.y)<(150+54))) && ((725)<ev.mouse.x) && ((150)<ev.mouse.y)){
             newstate = 1;
@@ -159,10 +161,10 @@ int main(int argc, char **argv){
           mousestate = 0;
       }else if((mousestate == 1)){
           //printf("El mouse esta en: %d\n",ev.mouse.x);        //Para pruebas
-          for(n=0;n<contadordeestados;n++){
-          leerestado(n,listadeestados)->estado_x = (ev.mouse.x)-46;
-          leerestado(n,listadeestados)->estado_y = (ev.mouse.y)-46;
-          }
+          
+          leerestado(estadoactual,listadeestados)->estado_x = (ev.mouse.x)-46;
+          leerestado(estadoactual,listadeestados)->estado_y = (ev.mouse.y)-46;
+
       }else if(ev.type == ALLEGRO_EVENT_KEY_UP){
           switch(ev.keyboard.keycode) {
             case ALLEGRO_KEY_ESCAPE:
