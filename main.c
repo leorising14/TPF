@@ -44,6 +44,7 @@ int main(int argc, char **argv){
    bool key[4] = { false, false, false, false };
    bool redraw = true;
    bool doexit = false;
+   float spline[]={50,50,150,70,60,450,650,700};
    int mousestate = 0;
    int newstate = 0;
    int newtransicion = 0;
@@ -269,7 +270,7 @@ int main(int argc, char **argv){
          al_draw_bitmap(borrartransicion, BUTTONS_COLUMN, BUTTON5_FILE, 0);
          al_draw_bitmap(borrarfuncion, BUTTONS_COLUMN, BUTTON6_FILE, 0);         
          al_draw_bitmap(makefile, BUTTONS_COLUMN, BUTTON_MAKEFILE_FILE, 0);
-         
+         al_draw_spline(spline,al_map_rgb(255,0,0),2);
          for(n=(IMG_SIZE)/2;n<(SCREEN_W-BUTTON_SIZE_W);n=n+IMG_SIZE)
          {
            al_draw_line(n,0,n,7.5*IMG_SIZE,al_map_rgb(0,255,0),2);             
