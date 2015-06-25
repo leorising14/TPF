@@ -212,7 +212,8 @@ int main(int argc, char **argv){
           (leerestado(contadordeestados,listadeestados))->estado_x = SCREEN_W / 2.0 - IMG_SIZE / 2.0;
           (leerestado(contadordeestados,listadeestados))->estado_y = SCREEN_H / 2.0 - IMG_SIZE / 2.0;
           (leerestado(contadordeestados,listadeestados))->estadoimg = al_load_bitmap("estado1.png");
-
+          (leerestado(contadordeestados,listadeestados))->cont = contadordeestados;
+          
           if(!(leerestado(contadordeestados,listadeestados))->estadoimg){
             fprintf(stderr, "No se pudo crear el bitmap!\n");
             al_destroy_display(display);
@@ -233,7 +234,8 @@ int main(int argc, char **argv){
       }else if((erasestate == 1)){
           printf("Borre estado \n");
           
-          quitarestado(&listadeestados);
+          delblock(estadoactual,listadeestados);
+          contadordeestados--;
           
           erasestate = 0;                                       //para que se ejecute una sola vez cuando presione el boton
       }else if((erasetransicion == 1)){

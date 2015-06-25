@@ -22,5 +22,6 @@ void quitarestado(miestado** p2state);
 miestado* leerestado(int numofstate, miestado *p2state);
 miestado* ultimoestado(miestado *p2state);
 
+void delblock(int num_of_block_to_del,miestado *lista);
 #endif	/* ARRDINAMICO_H */
 

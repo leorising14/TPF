@@ -87,3 +87,13 @@ miestado* ultimoestado(miestado *p2state)
     }
 }
 
+void delblock(int num_of_block_to_del,miestado *lista){
+miestado *recorrer=lista;
+miestado *bup=lista;
+for (;(recorrer->cont)<(num_of_block_to_del-1);recorrer=recorrer->next){
+}
+bup=recorrer;
+recorrer=recorrer->next;
+bup->next=recorrer->next;
+free(recorrer);
+}
