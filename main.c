@@ -65,16 +65,16 @@ int main(int argc, char **argv){
       return 0;
    }
    
-    if(!al_install_keyboard()) {
-   fprintf(stderr, "No se pudo inicializar el teclado!\n");
+   if(!al_install_keyboard()) {
+    fprintf(stderr, "No se pudo inicializar el teclado!\n");
     return -1;
- }
+   }
  
    if(!al_init_image_addon()) {       //IMPORTANTÍSIMO!!!!!!!!!!
         al_show_native_message_box(display, "Error", "Error", "No se pudo inicializar al_init_image_addon!", 
                               NULL, ALLEGRO_MESSAGEBOX_ERROR);
      return 0;
- }
+   }
  
    timer = al_create_timer(1.0 / FPS);
    if(!timer) {
@@ -155,9 +155,9 @@ int main(int argc, char **argv){
        for(n=0;n<contadordeestados;n++){        //para mover todas las bolitas de estado que estan en la pantallas
             if(((ev.mouse.x)<(leerestado(n,listadeestados)->estado_x+IMG_SIZE)) && (((ev.mouse.y)<(leerestado(n,listadeestados)->estado_y+IMG_SIZE))) 
                && ((leerestado(n,listadeestados)->estado_x)<ev.mouse.x) && ((leerestado(n,listadeestados)->estado_y)<ev.mouse.y)){
-                mousestate = 1;
-                estadoactual = n;
-            }
+                    mousestate = 1;
+                    estadoactual = n;
+            }  
        }
        
        if(((ev.mouse.x)<(BUTTONS_COLUMN+BUTTON_SIZE_W)) && (((ev.mouse.y)<(BUTTON1_FILE+BUTTON_SIZE_H))) && ((BUTTONS_COLUMN)<ev.mouse.x) && ((BUTTON1_FILE)<ev.mouse.y)){
@@ -174,6 +174,7 @@ int main(int argc, char **argv){
        
        if(((ev.mouse.x)<(BUTTONS_COLUMN+BUTTON_SIZE_W)) && (((ev.mouse.y)<(BUTTON4_FILE+BUTTON_SIZE_H))) && ((BUTTONS_COLUMN)<ev.mouse.x) && ((BUTTON4_FILE)<ev.mouse.y)){
             erasestate = 1;
+            printf("El estado actual es: %d \n",estadoactual); //debug
        }
 
        if(((ev.mouse.x)<(BUTTONS_COLUMN+BUTTON_SIZE_W)) && (((ev.mouse.y)<(BUTTON5_FILE+BUTTON_SIZE_H))) && ((BUTTONS_COLUMN)<ev.mouse.x) && ((BUTTON5_FILE)<ev.mouse.y)){
@@ -192,10 +193,11 @@ int main(int argc, char **argv){
           mousestate = 0;
       }else if((mousestate == 1)){
           //printf("El mouse esta en: %d\n",ev.mouse.x);        //Para pruebas
+          if((((ev.mouse.x)<7.5*IMG_SIZE))&&((ev.mouse.y)<SCREEN_H-IMG_SIZE)&&((ev.mouse.x)>IMG_SIZE/2)&&((ev.mouse.y)>IMG_SIZE/2)){        //si el mouse esta dentro de la pantalla, procedo a mover
+            leerestado(estadoactual,listadeestados)->estado_x = (ev.mouse.x)-IMG_SIZE/2;                                                    //muevo mi bolita de acuerdo al mouse
+            leerestado(estadoactual,listadeestados)->estado_y = (ev.mouse.y)-IMG_SIZE/2;
+          }
           
-          leerestado(estadoactual,listadeestados)->estado_x = (ev.mouse.x)-IMG_SIZE/2;
-          leerestado(estadoactual,listadeestados)->estado_y = (ev.mouse.y)-IMG_SIZE/2;
-
       }else if(ev.type == ALLEGRO_EVENT_KEY_UP){
           switch(ev.keyboard.keycode) {
             case ALLEGRO_KEY_ESCAPE:
@@ -230,6 +232,8 @@ int main(int argc, char **argv){
           newfunction = 0;                                       //para que se ejecute una sola vez cuando presione el boton
       }else if((erasestate == 1)){
           printf("Borre estado \n");
+          
+          quitarestado(&listadeestados);
           
           erasestate = 0;                                       //para que se ejecute una sola vez cuando presione el boton
       }else if((erasetransicion == 1)){

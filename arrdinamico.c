@@ -30,7 +30,7 @@ void agregarestado(miestado** p2state) //lista es el  puntero al primer elemento
     }
 }
 
-void borrarestado(miestado** p2state)
+void quitarestado(miestado** p2state)
 {
     if((*p2state) == NULL)
     {
@@ -51,7 +51,7 @@ void borrarestado(miestado** p2state)
         ((*p2state)->next) = NULL;
     }else
     {
-        borrarestado(&((*p2state)->next));
+        quitarestado(&((*p2state)->next));
     }
 }
 

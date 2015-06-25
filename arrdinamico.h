@@ -18,7 +18,7 @@ struct estado{
 };
 
 void agregarestado(miestado** p2state);
-void borrarestado(miestado** p2state);
+void quitarestado(miestado** p2state);
 miestado* leerestado(int numofstate, miestado *p2state);
 miestado* ultimoestado(miestado *p2state);
 
