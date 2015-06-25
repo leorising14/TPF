@@ -48,6 +48,10 @@ int main(int argc, char **argv){
    int newstate = 0;
    int newtransicion = 0;
    int newfunction = 0;
+   int erasestate = 0;
+   int erasetransicion = 0;
+   int erasefunction = 0;
+   int newmakefile = 0;
    
    int var=0;
    int n=0;
@@ -148,13 +152,14 @@ int main(int argc, char **argv){
       }
       else if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
        
-       for(n=0;n<contadordeestados;n++){
+       for(n=0;n<contadordeestados;n++){        //para mover todas las bolitas de estado que estan en la pantallas
             if(((ev.mouse.x)<(leerestado(n,listadeestados)->estado_x+IMG_SIZE)) && (((ev.mouse.y)<(leerestado(n,listadeestados)->estado_y+IMG_SIZE))) 
                && ((leerestado(n,listadeestados)->estado_x)<ev.mouse.x) && ((leerestado(n,listadeestados)->estado_y)<ev.mouse.y)){
                 mousestate = 1;
                 estadoactual = n;
             }
        }
+       
        if(((ev.mouse.x)<(BUTTONS_COLUMN+BUTTON_SIZE_W)) && (((ev.mouse.y)<(BUTTON1_FILE+BUTTON_SIZE_H))) && ((BUTTONS_COLUMN)<ev.mouse.x) && ((BUTTON1_FILE)<ev.mouse.y)){
             newstate = 1;
        }
@@ -166,6 +171,22 @@ int main(int argc, char **argv){
        if(((ev.mouse.x)<(BUTTONS_COLUMN+BUTTON_SIZE_W)) && (((ev.mouse.y)<(BUTTON3_FILE+BUTTON_SIZE_H))) && ((BUTTONS_COLUMN)<ev.mouse.x) && ((BUTTON3_FILE)<ev.mouse.y)){
             newfunction = 1;
        }
+       
+       if(((ev.mouse.x)<(BUTTONS_COLUMN+BUTTON_SIZE_W)) && (((ev.mouse.y)<(BUTTON4_FILE+BUTTON_SIZE_H))) && ((BUTTONS_COLUMN)<ev.mouse.x) && ((BUTTON4_FILE)<ev.mouse.y)){
+            erasestate = 1;
+       }
+
+       if(((ev.mouse.x)<(BUTTONS_COLUMN+BUTTON_SIZE_W)) && (((ev.mouse.y)<(BUTTON5_FILE+BUTTON_SIZE_H))) && ((BUTTONS_COLUMN)<ev.mouse.x) && ((BUTTON5_FILE)<ev.mouse.y)){
+            erasetransicion = 1;
+       }
+
+       if(((ev.mouse.x)<(BUTTONS_COLUMN+BUTTON_SIZE_W)) && (((ev.mouse.y)<(BUTTON6_FILE+BUTTON_SIZE_H))) && ((BUTTONS_COLUMN)<ev.mouse.x) && ((BUTTON6_FILE)<ev.mouse.y)){
+            erasefunction = 1;
+       }       
+       
+       if(((ev.mouse.x)<(BUTTONS_COLUMN+BUTTON_SIZE_W)) && (((ev.mouse.y)<(BUTTON_MAKEFILE_FILE+BUTTON_SIZE_H+30))) && ((BUTTONS_COLUMN)<ev.mouse.x) && ((BUTTON_MAKEFILE_FILE)<ev.mouse.y)){
+            newmakefile = 1;
+       }              
        
       }else if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP){
           mousestate = 0;
@@ -198,11 +219,31 @@ int main(int argc, char **argv){
           }
           
           contadordeestados++;
-          newstate=0;          
+          newstate=0;                                       //para que se ejecute una sola vez cuando presione el boton
       }else if((newtransicion == 1)){
           printf("Aregue transicion\n");
+          
+          newtransicion = 0;                                       //para que se ejecute una sola vez cuando presione el boton
       }else if((newfunction == 1)){
           printf("Agregue funcion\n");
+          
+          newfunction = 0;                                       //para que se ejecute una sola vez cuando presione el boton
+      }else if((erasestate == 1)){
+          printf("Borre estado \n");
+          
+          erasestate = 0;                                       //para que se ejecute una sola vez cuando presione el boton
+      }else if((erasetransicion == 1)){
+          printf("Borre transicion \n");
+          
+          erasetransicion = 0;                                       //para que se ejecute una sola vez cuando presione el boton
+      }else if((erasefunction == 1)){
+          printf("Borre funcion \n");
+          
+          erasefunction = 0;                                       //para que se ejecute una sola vez cuando presione el boton
+      }else if((newmakefile == 1)){
+          printf("Se esta por generar el makefile! \n");
+          
+          newmakefile = 0;                                       //para que se ejecute una sola vez cuando presione el boton
       }
  
       if(redraw && al_is_event_queue_empty(event_queue)) {
