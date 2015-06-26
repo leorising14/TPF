@@ -14,7 +14,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 
-#include "arrdinamico.h"
+#include "arrdinam2.h"
 
 const float FPS = 60;
 const int SCREEN_W = 1000;

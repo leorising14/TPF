@@ -31,7 +31,7 @@ typedef struct {
     mifuncion* p2first;
 } funcionheader;
 
-int addstate(float newx, float newy, char* newname, estadoheader *lista);
+int addstate(float newx, float newy, char* newname, ALLEGRO_BITMAP* newimage, estadoheader *lista);
 //addstate agrega un estado con las caracteristicas que le pases
 
 int delstate(float delx, float dely, estadoheader *lista);

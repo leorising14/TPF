@@ -11,7 +11,7 @@
 
 #include "arrdinam2.h"
 
-int addstate(float newx, float newy, char* newname, estadoheader *lista)
+int addstate(float newx, float newy, char* newname, ALLEGRO_BITMAP* newimage, estadoheader *lista)
 {
     if(strlen(newname)>=20)
     {
@@ -33,6 +33,7 @@ int addstate(float newx, float newy, char* newname, estadoheader *lista)
         newstate->estado_y=newy;
         newstate->next=NULL;
         newstate->prev=NULL;
+        newstate->estadoimg=newimage;
         strcpy(newstate->name, newname);
         lista->cant=1;
         return 0;
@@ -45,6 +46,7 @@ int addstate(float newx, float newy, char* newname, estadoheader *lista)
     newstate->estado_y=newy;
     newstate->next=NULL;
     newstate->prev=recorrer;
+    newstate->estadoimg=newimage;
     strcpy(newstate->name, newname);
     (lista->cant)++;
     return 0;
