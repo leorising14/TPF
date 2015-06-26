@@ -49,6 +49,7 @@ int main(int argc, char **argv){
    bool doexit = false;
    float spline[]={50,50,150,70,60,450,650,700};
    char number[1];
+   char c;
    int mousestate = 0;
    int newstate = 0;
    int newtransicion = 0;
@@ -256,6 +257,9 @@ int main(int argc, char **argv){
           printf("El origen de la transicion es: %d\n", origentransicion);
           printf("El destino de la transicion es: %d\n", destinotransicion);
           //Aca modificaria todas las estructuras agregando la transicion
+          //while((c=getchar())!='\n'){
+          //    printf("%c\n",c);
+          //}
           newtransicion = 0;                                       //para que se ejecute una sola vez cuando presione el boton
           origentransicion = -1;                                    //vuelvo al valor default
           destinotransicion = -1;

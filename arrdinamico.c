@@ -107,3 +107,5 @@ void delblock(int num_of_block_to_del,miestado *lista){
     free(recorrer);
     }
 }
+
+
