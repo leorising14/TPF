@@ -6,11 +6,14 @@
  */
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_native_dialog.h>
 #include <allegro5/allegro_primitives.h>
- 
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h>
+
 #include "arrdinamico.h"
 
 const float FPS = 60;
@@ -45,6 +48,7 @@ int main(int argc, char **argv){
    bool redraw = true;
    bool doexit = false;
    float spline[]={50,50,150,70,60,450,650,700};
+   char number[1];
    int mousestate = 0;
    int newstate = 0;
    int newtransicion = 0;
@@ -85,8 +89,15 @@ int main(int argc, char **argv){
       return -1;
    }
    
-   if(!al_install_mouse()) {
+   if(!al_install_mouse()){
       fprintf(stderr, "No se pudo inicializar el mouse!\n");
+      return -1;
+   }
+   
+   al_init_font_addon(); // initialize the font addon
+   
+   if(!al_init_ttf_addon()){
+      fprintf(stderr, "No se pudo inicializar el addon de ttf!\n");
       return -1;
    }
    
@@ -112,7 +123,14 @@ int main(int argc, char **argv){
       al_destroy_timer(timer);
       return -1;
    }
-  
+
+   ALLEGRO_FONT *font = al_load_ttf_font("serif.ttf",20,0);
+ 
+   if (!font){
+      fprintf(stderr, "Could not load 'serif.ttf'.\n");
+      return -1;
+   }
+   
    al_set_target_bitmap(al_get_backbuffer(display));
    
    event_queue = al_create_event_queue();
@@ -274,6 +292,7 @@ int main(int argc, char **argv){
          {
              for(n=0;n<contadordeestados;n++){
                 al_draw_bitmap(leerestado(n,listadeestados)->estadoimg, leerestado(n,listadeestados)->estado_x, leerestado(n,listadeestados)->estado_y, 0);
+                al_draw_text(font, al_map_rgb(255,255,255),leerestado(n,listadeestados)->estado_x+75, leerestado(n,listadeestados)->estado_y+35, ALLEGRO_ALIGN_CENTER, itoa(leerestado(n,listadeestados)->cont,number,10));
              } 
          }
          al_draw_bitmap(nuevoestado, BUTTONS_COLUMN, BUTTON1_FILE, 0);
@@ -301,6 +320,7 @@ int main(int argc, char **argv){
    for(n=0;n<contadordeestados;n++){
         al_destroy_bitmap(leerestado(n,listadeestados)->estadoimg);
    }
+   al_destroy_font(font);
    al_destroy_timer(timer);
    al_destroy_display(display);
    al_destroy_event_queue(event_queue);
