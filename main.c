@@ -48,6 +48,8 @@ int main(int argc, char **argv){
    int mousestate = 0;
    int newstate = 0;
    int newtransicion = 0;
+   int origentransicion = -1;       //pongo en valor default ya que se puede confundir con el estado 0
+   int destinotransicion = -1;
    int newfunction = 0;
    int erasestate = 0;
    int erasetransicion = 0;
@@ -111,8 +113,6 @@ int main(int argc, char **argv){
       return -1;
    }
   
-
-   
    al_set_target_bitmap(al_get_backbuffer(display));
    
    event_queue = al_create_event_queue();
@@ -158,6 +158,15 @@ int main(int argc, char **argv){
                && ((leerestado(n,listadeestados)->estado_x)<ev.mouse.x) && ((leerestado(n,listadeestados)->estado_y)<ev.mouse.y)){
                     mousestate = 1;
                     estadoactual = n;
+                    if(newtransicion == 1)
+                    {
+                        if(origentransicion == -1)
+                        {
+                            origentransicion = n;
+                        }else{
+                            destinotransicion = n; 
+                        }                       
+                    }
             }  
        }
        
@@ -224,10 +233,14 @@ int main(int argc, char **argv){
           
           contadordeestados++;
           newstate=0;                                       //para que se ejecute una sola vez cuando presione el boton
-      }else if((newtransicion == 1)){
+      }else if((newtransicion == 1) && (origentransicion != -1) && (destinotransicion != -1)){
           printf("Aregue transicion\n");
-          
+          printf("El origen de la transicion es: %d\n", origentransicion);
+          printf("El destino de la transicion es: %d\n", destinotransicion);
+          //Aca modificaria todas las estructuras agregando la transicion
           newtransicion = 0;                                       //para que se ejecute una sola vez cuando presione el boton
+          origentransicion = -1;                                    //vuelvo al valor default
+          destinotransicion = -1;
       }else if((newfunction == 1)){
           printf("Agregue funcion\n");
           
@@ -270,7 +283,7 @@ int main(int argc, char **argv){
          al_draw_bitmap(borrartransicion, BUTTONS_COLUMN, BUTTON5_FILE, 0);
          al_draw_bitmap(borrarfuncion, BUTTONS_COLUMN, BUTTON6_FILE, 0);         
          al_draw_bitmap(makefile, BUTTONS_COLUMN, BUTTON_MAKEFILE_FILE, 0);
-         al_draw_spline(spline,al_map_rgb(255,0,0),2);
+         //al_draw_spline(spline,al_map_rgb(255,0,0),2);
          for(n=(IMG_SIZE)/2;n<(SCREEN_W-BUTTON_SIZE_W);n=n+IMG_SIZE)
          {
            al_draw_line(n,0,n,7.5*IMG_SIZE,al_map_rgb(0,255,0),2);             
