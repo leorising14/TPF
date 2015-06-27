@@ -64,6 +64,15 @@ int main(int argc, char **argv){
    int erasefunction = 0;
    int newmakefile = 0;
    
+   int xf=0;                          //Variables que me simplifican MUCHISIMO dibujar las lineas, los splines y las flechas
+   int xi=0;
+   int yf=0;
+   int yi=0;
+   int px1=0;                         //coordenadas que uso para las flechas
+   int py1=0;
+   int px2=0;
+   int py2=0;
+   
    int var=0;
    int n=0;
    int contadordeestados=0;
@@ -308,10 +317,17 @@ int main(int argc, char **argv){
          
          if(contadordefunciones>0){
                  for(n=0;n<contadordefunciones;n++){
-                 al_draw_line((leerestado(leerfuncion(n,listadetransiciones)->origin,listadeestados))->estado_x+IMG_SIZE/2,(leerestado(leerfuncion(n,listadetransiciones)->origin,listadeestados))->estado_y+IMG_SIZE/2,
-                         (leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_x+IMG_SIZE/2,(leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_y+IMG_SIZE/2,
-                         al_map_rgb(0,255,0),4);
-                al_draw_rotated_bitmap(arrow, (leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_x,(leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_y,IMG_SIZE/2,IMG_SIZE/2,0,0);
+                     xi=(leerestado(leerfuncion(n,listadetransiciones)->origin,listadeestados))->estado_x+IMG_SIZE/2;
+                     yi=(leerestado(leerfuncion(n,listadetransiciones)->origin,listadeestados))->estado_y+IMG_SIZE/2;
+                     xf=(leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_x+IMG_SIZE/2;
+                     yf=(leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_y+IMG_SIZE/2;
+                     px1=xf-(IMG_SIZE/2)*cos(atan2((yf-yi),(xf-xi)));
+                     py1=yf-(IMG_SIZE/2)*sin(atan2((yf-yi),(xf-xi)));
+                     px2=xf-((IMG_SIZE/2)+15)*cos(atan2((yf-yi),(xf-xi)));
+                     py2=yf-((IMG_SIZE/2)+15)*sin(atan2((yf-yi),(xf-xi)));
+                     al_draw_line(xi,yi,xf,yf,al_map_rgb(0,255,0),4);
+                     al_draw_filled_triangle(px1,py1,px2,py2,px1-5,py1+15,al_map_rgb(0,0,0));
+                //al_draw_rotated_bitmap(arrow, (leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_x,(leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_y,IMG_SIZE/2,IMG_SIZE/2,0,0);
              }
           } 
          
@@ -321,12 +337,8 @@ int main(int argc, char **argv){
                 al_draw_bitmap(leerestado(n,listadeestados)->estadoimg, leerestado(n,listadeestados)->estado_x, leerestado(n,listadeestados)->estado_y, 0);
                 al_draw_text(font, al_map_rgb(255,255,255),leerestado(n,listadeestados)->estado_x+75, leerestado(n,listadeestados)->estado_y+35, ALLEGRO_ALIGN_CENTER, itoa(leerestado(n,listadeestados)->cont,number,10));
              } 
-             
-
-
          }
  
-
          al_draw_bitmap(nuevoestado, BUTTONS_COLUMN, BUTTON1_FILE, 0);
          al_draw_bitmap(nuevatransicion, BUTTONS_COLUMN, BUTTON2_FILE, 0);
          al_draw_bitmap(nuevafuncion, BUTTONS_COLUMN, BUTTON3_FILE, 0);
@@ -335,6 +347,7 @@ int main(int argc, char **argv){
          al_draw_bitmap(borrarfuncion, BUTTONS_COLUMN, BUTTON6_FILE, 0);         
          al_draw_bitmap(makefile, BUTTONS_COLUMN, BUTTON_MAKEFILE_FILE, 0);
          //al_draw_spline(spline,al_map_rgb(255,0,0),2);
+         
 /*       //grilla (opcional)
          for(n=(IMG_SIZE)/2;n<(SCREEN_W-BUTTON_SIZE_W);n=n+IMG_SIZE)
          {
