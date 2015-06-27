@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_native_dialog.h>
@@ -42,6 +43,7 @@ int main(int argc, char **argv){
    ALLEGRO_BITMAP *borrarfuncion = NULL;
    ALLEGRO_BITMAP *makefile = NULL;
    ALLEGRO_BITMAP *blankspace = NULL;
+   ALLEGRO_BITMAP *arrow = NULL;
    ALLEGRO_EVENT_QUEUE *event_queue = NULL;
    ALLEGRO_TIMER *timer = NULL;
    bool key[4] = { false, false, false, false };
@@ -120,8 +122,9 @@ int main(int argc, char **argv){
    borrartransicion = al_load_bitmap("borrartransicion.png");
    makefile = al_load_bitmap("makefile.png");
    blankspace = al_load_bitmap("blankspace.png");
+   arrow = al_load_bitmap("arrow.png");
    
-   if(!nuevoestado || !nuevafuncion || !nuevatransicion || !borrarestado || !borrarfuncion || !borrartransicion || !makefile) {
+   if(!nuevoestado || !nuevafuncion || !nuevatransicion || !borrarestado || !borrarfuncion || !borrartransicion || !makefile || !arrow) {
       fprintf(stderr, "No se pudieron crear los bitmaps!\n");
       al_destroy_display(display);
       al_destroy_timer(timer);
@@ -308,6 +311,7 @@ int main(int argc, char **argv){
                  al_draw_line((leerestado(leerfuncion(n,listadetransiciones)->origin,listadeestados))->estado_x+IMG_SIZE/2,(leerestado(leerfuncion(n,listadetransiciones)->origin,listadeestados))->estado_y+IMG_SIZE/2,
                          (leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_x+IMG_SIZE/2,(leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_y+IMG_SIZE/2,
                          al_map_rgb(0,255,0),4);
+                al_draw_rotated_bitmap(arrow, (leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_x,(leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_y,IMG_SIZE/2,IMG_SIZE/2,0,0);
              }
           } 
          
@@ -322,6 +326,7 @@ int main(int argc, char **argv){
 
          }
  
+
          al_draw_bitmap(nuevoestado, BUTTONS_COLUMN, BUTTON1_FILE, 0);
          al_draw_bitmap(nuevatransicion, BUTTONS_COLUMN, BUTTON2_FILE, 0);
          al_draw_bitmap(nuevafuncion, BUTTONS_COLUMN, BUTTON3_FILE, 0);
