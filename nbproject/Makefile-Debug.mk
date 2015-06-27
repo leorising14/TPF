@@ -36,7 +36,6 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/arrdinamico.o \
-	${OBJECTDIR}/arrdinamicofunciones.o \
 	${OBJECTDIR}/main.o
 
 
@@ -68,11 +67,6 @@ ${OBJECTDIR}/arrdinamico.o: arrdinamico.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/arrdinamico.o arrdinamico.c
-
-${OBJECTDIR}/arrdinamicofunciones.o: arrdinamicofunciones.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.c) -g -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/arrdinamicofunciones.o arrdinamicofunciones.c
 
 ${OBJECTDIR}/main.o: main.c 
 	${MKDIR} -p ${OBJECTDIR}

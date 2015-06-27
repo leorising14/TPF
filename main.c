@@ -50,6 +50,7 @@ int main(int argc, char **argv){
    float spline[]={50,50,150,70,60,450,650,700};
    char number[1];
    char c;
+   char def[]={"default"};
    int mousestate = 0;
    int newstate = 0;
    int newtransicion = 0;
@@ -64,8 +65,10 @@ int main(int argc, char **argv){
    int var=0;
    int n=0;
    int contadordeestados=0;
+   int contadordefunciones=0;
    int estadoactual=0;
    miestado* listadeestados = NULL;
+   mifuncion* listadetransiciones = NULL;
 
    if(!al_init()) {
       al_show_native_message_box(display, "Error", "Error", "No se pudo inicializar allegro!", 
@@ -235,7 +238,7 @@ int main(int argc, char **argv){
           }
       }else if((newstate == 1)){
           printf("Agregue estado\n");
-          var=1;
+          var=1;                        //esto es para que luego no dibuje cuando se ejecute el programa
 
           agregarestado(&listadeestados);
           (leerestado(contadordeestados,listadeestados))->estado_x = SCREEN_W / 2.0 - IMG_SIZE / 2.0;
@@ -256,13 +259,20 @@ int main(int argc, char **argv){
           printf("Aregue transicion\n");
           printf("El origen de la transicion es: %d\n", origentransicion);
           printf("El destino de la transicion es: %d\n", destinotransicion);
+          
           //Aca modificaria todas las estructuras agregando la transicion
           //while((c=getchar())!='\n'){
           //    printf("%c\n",c);
           //}
+
+          agregarfuncion(&listadetransiciones);
+          leerfuncion(contadordefunciones,listadetransiciones)->origin = origentransicion;
+          leerfuncion(contadordefunciones,listadetransiciones)->destiny = destinotransicion;
+
           newtransicion = 0;                                       //para que se ejecute una sola vez cuando presione el boton
           origentransicion = -1;                                    //vuelvo al valor default
           destinotransicion = -1;
+          contadordefunciones++;
       }else if((newfunction == 1)){
           printf("Agregue funcion\n");
           
@@ -292,13 +302,26 @@ int main(int argc, char **argv){
          redraw = false; //cando ya dibuje, espero de nuevo al timer
  
          al_clear_to_color(al_map_rgb(255,255,255));
+         
+         if(contadordefunciones>0){
+                 for(n=0;n<contadordefunciones;n++){
+                 al_draw_line((leerestado(leerfuncion(n,listadetransiciones)->origin,listadeestados))->estado_x+IMG_SIZE/2,(leerestado(leerfuncion(n,listadetransiciones)->origin,listadeestados))->estado_y+IMG_SIZE/2,
+                         (leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_x+IMG_SIZE/2,(leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_y+IMG_SIZE/2,
+                         al_map_rgb(0,255,0),4);
+             }
+          } 
+         
          if(var==1)
          {
              for(n=0;n<contadordeestados;n++){
                 al_draw_bitmap(leerestado(n,listadeestados)->estadoimg, leerestado(n,listadeestados)->estado_x, leerestado(n,listadeestados)->estado_y, 0);
                 al_draw_text(font, al_map_rgb(255,255,255),leerestado(n,listadeestados)->estado_x+75, leerestado(n,listadeestados)->estado_y+35, ALLEGRO_ALIGN_CENTER, itoa(leerestado(n,listadeestados)->cont,number,10));
              } 
+             
+
+
          }
+ 
          al_draw_bitmap(nuevoestado, BUTTONS_COLUMN, BUTTON1_FILE, 0);
          al_draw_bitmap(nuevatransicion, BUTTONS_COLUMN, BUTTON2_FILE, 0);
          al_draw_bitmap(nuevafuncion, BUTTONS_COLUMN, BUTTON3_FILE, 0);
@@ -307,6 +330,7 @@ int main(int argc, char **argv){
          al_draw_bitmap(borrarfuncion, BUTTONS_COLUMN, BUTTON6_FILE, 0);         
          al_draw_bitmap(makefile, BUTTONS_COLUMN, BUTTON_MAKEFILE_FILE, 0);
          //al_draw_spline(spline,al_map_rgb(255,0,0),2);
+/*       //grilla (opcional)
          for(n=(IMG_SIZE)/2;n<(SCREEN_W-BUTTON_SIZE_W);n=n+IMG_SIZE)
          {
            al_draw_line(n,0,n,7.5*IMG_SIZE,al_map_rgb(0,255,0),2);             
@@ -316,6 +340,7 @@ int main(int argc, char **argv){
          {
            al_draw_line(0,n,7.5*IMG_SIZE,n,al_map_rgb(0,255,0),2);             
          }
+*/
 
          al_flip_display();
       }

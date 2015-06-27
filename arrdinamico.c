@@ -109,3 +109,89 @@ void delblock(int num_of_block_to_del,miestado *lista){
 }
 
 
+//Recibir un string que seria lo que pasa por terminal externa y el puntero la primer elemento del arreglo dinamico de funciones
+//
+//Devuelve puntero a mifuncion que coincide con el nombre o NULL si no hay concidencia
+
+/*
+mifuncion* getfun(char argv[],mifuncion* header){
+	FILE* p2file=fopen("testfunciones.txt","r+");//Hay que cambiar el nombre del archivo
+	if (p2file== NULL)
+	{
+		fprintf(stderr, "Cannot open input file.\n");
+		return NULL;
+   	}
+	mifuncion* recorrer=header;
+	int i;
+	int running=1;
+	char str_fun[20];	//al finalizar va a ser el nombre de la funcion que pasas por linea de comando (si esta correctamente escrita)
+	char c;
+	
+	while(running)
+	{
+		for(i=0;i<=strlen(argv[]);i++)
+		{
+			if((c=fgetc(p2file))==EOF)
+				running=0;
+			else if((argv[i])==c)
+			{
+				*(str_fun+i)=c;
+			}					//Motor de búsqueda.
+			else break;
+		}
+		if (!strcmp(argv[],str_fun))
+		{
+			
+			running=0;
+		}
+	}
+	
+	fclose(p2file);
+
+	if (!strcmp(argv[1],str_fun))
+	{
+		printf("%s\n",str_fun);		//Testeo
+	}
+	else {printf("no hay concidencia\n");	//Testeo
+		return NULL;}
+	
+	
+
+	//Ahora quiero relacionar el nombre de la funcion que coincide con lo que pasas por la terminal externa con el nombre de la función//
+
+	for (i=0;recorrer->next!=NULL;recorrer=recorrer->next)
+            {
+                if(!strcmp(recorrer->name,str_fun))
+                   return recorrer;
+            }
+}
+*/
+
+void agregarfuncion(mifuncion** p2state) //lista es el  puntero al primer elemento, NO SE PUEDE TOCAR
+{
+    if((*p2state) == NULL)
+    {
+        (*p2state) = calloc(1, sizeof(mifuncion));
+        ((*p2state) -> next) = NULL;
+    }else
+    {
+        agregarfuncion(&((*p2state)->next));
+    }
+}
+
+mifuncion* leerfuncion(int numofstate, mifuncion *p2state)
+{
+    if(p2state == NULL)
+    {
+        printf("El estado no existe!");
+        return NULL;
+    }
+    if(numofstate == 0)
+    {
+        return p2state;
+    }else
+    {
+        return leerfuncion(numofstate-1,(p2state->next));
+    }
+}
+

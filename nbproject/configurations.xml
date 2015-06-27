@@ -58,10 +58,6 @@
       </item>
       <item path="arrdinamico.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="arrdinamicofunciones.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="arrdinamicofunciones.h" ex="false" tool="3" flavor2="0">
-      </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
@@ -88,10 +84,6 @@
       <item path="arrdinamico.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="arrdinamico.h" ex="false" tool="3" flavor2="0">
-      </item>
-      <item path="arrdinamicofunciones.c" ex="false" tool="0" flavor2="0">
-      </item>
-      <item path="arrdinamicofunciones.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>
