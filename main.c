@@ -326,7 +326,8 @@ int main(int argc, char **argv){
                      px2=xf-((IMG_SIZE/2)+15)*cos(atan2((yf-yi),(xf-xi)));
                      py2=yf-((IMG_SIZE/2)+15)*sin(atan2((yf-yi),(xf-xi)));
                      al_draw_line(xi,yi,xf,yf,al_map_rgb(0,255,0),4);
-                     al_draw_filled_triangle(px1,py1,px2,py2,px1-5,py1+15,al_map_rgb(0,0,0));
+                     al_draw_filled_triangle(px1,py1,px2,py2,px2+20*cos(atan2((yf-yi),(xf-xi))),py2-20*sin(atan2((yf-yi),(xf-xi))),al_map_rgb(0,0,0));
+                     al_draw_filled_triangle(px1,py1,px2,py2,px2-20*cos(atan2((yf-yi),(xf-xi))),py2+20*sin(atan2((yf-yi),(xf-xi))),al_map_rgb(0,0,0));
                 //al_draw_rotated_bitmap(arrow, (leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_x,(leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_y,IMG_SIZE/2,IMG_SIZE/2,0,0);
              }
           } 
