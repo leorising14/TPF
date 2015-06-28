@@ -321,14 +321,13 @@ int main(int argc, char **argv){
                      yi=(leerestado(leerfuncion(n,listadetransiciones)->origin,listadeestados))->estado_y+IMG_SIZE/2;
                      xf=(leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_x+IMG_SIZE/2;
                      yf=(leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_y+IMG_SIZE/2;
-                     px1=xf-(IMG_SIZE/2)*cos(atan2((yf-yi),(xf-xi)));
+                     px1=xf-(IMG_SIZE/2)*cos(atan2((yf-yi),(xf-xi)));           //punto en la periferia del globito que coincide con la linea de union entre globitos
                      py1=yf-(IMG_SIZE/2)*sin(atan2((yf-yi),(xf-xi)));
-                     px2=xf-((IMG_SIZE/2)+15)*cos(atan2((yf-yi),(xf-xi)));
-                     py2=yf-((IMG_SIZE/2)+15)*sin(atan2((yf-yi),(xf-xi)));
-                     al_draw_line(xi,yi,xf,yf,al_map_rgb(0,255,0),4);
-                     al_draw_filled_triangle(px1,py1,px2,py2,px2+20*cos(atan2((yf-yi),(xf-xi))),py2-20*sin(atan2((yf-yi),(xf-xi))),al_map_rgb(0,0,0));
-                     al_draw_filled_triangle(px1,py1,px2,py2,px2-20*cos(atan2((yf-yi),(xf-xi))),py2+20*sin(atan2((yf-yi),(xf-xi))),al_map_rgb(0,0,0));
-                //al_draw_rotated_bitmap(arrow, (leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_x,(leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_y,IMG_SIZE/2,IMG_SIZE/2,0,0);
+                     px2=xf-((IMG_SIZE/2)+30)*cos(atan2((yf-yi),(xf-xi)));      
+                     py2=yf-((IMG_SIZE/2)+30)*sin(atan2((yf-yi),(xf-xi)));
+                     al_draw_line(xi,yi,xf,yf,al_map_rgb(0,0,0),4);
+                     al_draw_filled_triangle(px1,py1,px2,py2,px2-10*cos(-M_PI_2+atan2((yf-yi),(xf-xi))),py2-10*sin(-M_PI_2+atan2((yf-yi),(xf-xi))),al_map_rgb(0,0,0));
+                     al_draw_filled_triangle(px1,py1,px2,py2,px2+10*cos(-M_PI_2+atan2((yf-yi),(xf-xi))),py2+10*sin(-M_PI_2+atan2((yf-yi),(xf-xi))),al_map_rgb(0,0,0));
              }
           } 
          
