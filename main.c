@@ -204,7 +204,7 @@ int main(int argc, char **argv){
             }  
        }
        
-       if(((ev.mouse.x)<(BUTTONS_COLUMN+BUTTON_SIZE_W)) && (((ev.mouse.y)<(BUTTON1_FILE+BUTTON_SIZE_H))) && ((BUTTONS_COLUMN)<ev.mouse.x) && ((BUTTON1_FILE)<ev.mouse.y)){
+       if(((ev.mouse.x)<(BUTTONS_COLUMN+BUTTON_SIZE_W)) && (((ev.mouse.y)<(BUTTON1_FILE+BUTTON_SIZE_H))) && ((BUTTONS_COLUMN)<ev.mouse.x) && ((BUTTON1_FILE)<ev.mouse.y)){  //me fijo si se apreto algun boton
             newstate = 1;
        }
        
@@ -242,23 +242,23 @@ int main(int argc, char **argv){
             leerestado(estadoactual,listadeestados)->estado_y = (ev.mouse.y)-IMG_SIZE/2;
           }
           
-      }else if(ev.type == ALLEGRO_EVENT_KEY_UP){
+      }else if(ev.type == ALLEGRO_EVENT_KEY_UP){                //me fijo si aprete X para salir del programa
           switch(ev.keyboard.keycode) {
             case ALLEGRO_KEY_ESCAPE:
                doexit = true;
                break;              
           }
-      }else if((newstate == 1)){
+      }else if((newstate == 1)){        //en el caso de que se haya apretado el boton de agregar estado
           printf("Agregue estado\n");
           var=1;                        //esto es para que luego no dibuje cuando se ejecute el programa
 
-          agregarestado(&listadeestados);
+          agregarestado(&listadeestados);           //agrego un estado e inicializo los campos correspondientes
           (leerestado(contadordeestados,listadeestados))->estado_x = SCREEN_W / 2.0 - IMG_SIZE / 2.0;
           (leerestado(contadordeestados,listadeestados))->estado_y = SCREEN_H / 2.0 - IMG_SIZE / 2.0;
           (leerestado(contadordeestados,listadeestados))->estadoimg = al_load_bitmap("estado1.png");
           (leerestado(contadordeestados,listadeestados))->cont = contadordeestados;
           
-          if(!(leerestado(contadordeestados,listadeestados))->estadoimg){
+          if(!(leerestado(contadordeestados,listadeestados))->estadoimg){   //si no se encuentra la imagen del puntero, mando un mensaje de error
             fprintf(stderr, "No se pudo crear el bitmap!\n");
             al_destroy_display(display);
             al_destroy_timer(timer);
@@ -267,7 +267,7 @@ int main(int argc, char **argv){
           
           contadordeestados++;
           newstate=0;                                       //para que se ejecute una sola vez cuando presione el boton
-      }else if((newtransicion == 1) && (origentransicion != -1) && (destinotransicion != -1)){
+      }else if((newtransicion == 1) && (origentransicion != -1) && (destinotransicion != -1)){         //en el caso de que se haya apretado el boton de agregar transicion, y se hayan apretado los dos estados a unir
           printf("Aregue transicion\n");
           printf("El origen de la transicion es: %d\n", origentransicion);
           printf("El destino de la transicion es: %d\n", destinotransicion);
@@ -282,29 +282,29 @@ int main(int argc, char **argv){
           leerfuncion(contadordefunciones,listadetransiciones)->destiny = destinotransicion;
 
           newtransicion = 0;                                       //para que se ejecute una sola vez cuando presione el boton
-          origentransicion = -1;                                    //vuelvo al valor default
+          origentransicion = -1;                                    //vuelvo al valor default de origen y destino
           destinotransicion = -1;
           contadordefunciones++;
-      }else if((newfunction == 1)){
+      }else if((newfunction == 1)){        //en el caso de que se haya apretado el boton de agregar funcion
           printf("Agregue funcion\n");
           
           newfunction = 0;                                       //para que se ejecute una sola vez cuando presione el boton
-      }else if((erasestate == 1)){
+      }else if((erasestate == 1)){        //en el caso de que se haya apretado el boton de borrar estado
           printf("Borre estado \n");
           
           delblock(estadoactual,listadeestados);
           contadordeestados--;
           
           erasestate = 0;                                       //para que se ejecute una sola vez cuando presione el boton
-      }else if((erasetransicion == 1)){
+      }else if((erasetransicion == 1)){        //en el caso de que se haya apretado el boton de borrar transicion
           printf("Borre transicion \n");
           
           erasetransicion = 0;                                       //para que se ejecute una sola vez cuando presione el boton
-      }else if((erasefunction == 1)){
+      }else if((erasefunction == 1)){        //en el caso de que se haya apretado el boton de borrar funcion
           printf("Borre funcion \n");
           
           erasefunction = 0;                                       //para que se ejecute una sola vez cuando presione el boton
-      }else if((newmakefile == 1)){
+      }else if((newmakefile == 1)){        //en el caso de que se haya apretado el boton de hacer makefile
           printf("Se esta por generar el makefile! \n");
           
           newmakefile = 0;                                       //para que se ejecute una sola vez cuando presione el boton
@@ -315,18 +315,18 @@ int main(int argc, char **argv){
  
          al_clear_to_color(al_map_rgb(255,255,255));
          
-         if(contadordefunciones>0){
+         if(contadordefunciones>0){                             //dibujo las transiciones y las flechas
                  for(n=0;n<contadordefunciones;n++){
                      xi=(leerestado(leerfuncion(n,listadetransiciones)->origin,listadeestados))->estado_x+IMG_SIZE/2;
                      yi=(leerestado(leerfuncion(n,listadetransiciones)->origin,listadeestados))->estado_y+IMG_SIZE/2;
                      xf=(leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_x+IMG_SIZE/2;
                      yf=(leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_y+IMG_SIZE/2;
-                     px1=xf-(IMG_SIZE/2)*cos(atan2((yf-yi),(xf-xi)));           //punto en la periferia del globito que coincide con la linea de union entre globitos
-                     py1=yf-(IMG_SIZE/2)*sin(atan2((yf-yi),(xf-xi)));
-                     px2=xf-((IMG_SIZE/2)+30)*cos(atan2((yf-yi),(xf-xi)));      
-                     py2=yf-((IMG_SIZE/2)+30)*sin(atan2((yf-yi),(xf-xi)));
+                     px1=xf-((IMG_SIZE-10)/2)*cos(atan2((yf-yi),(xf-xi)));           //punto en la periferia del globito que coincide con la linea de union entre globitos
+                     py1=yf-((IMG_SIZE-10)/2)*sin(atan2((yf-yi),(xf-xi)));
+                     px2=xf-(((IMG_SIZE-10)/2)+30)*cos(atan2((yf-yi),(xf-xi)));      
+                     py2=yf-(((IMG_SIZE-10)/2)+30)*sin(atan2((yf-yi),(xf-xi)));
                      al_draw_line(xi,yi,xf,yf,al_map_rgb(0,0,0),4);
-                     al_draw_filled_triangle(px1,py1,px2,py2,px2-10*cos(-M_PI_2+atan2((yf-yi),(xf-xi))),py2-10*sin(-M_PI_2+atan2((yf-yi),(xf-xi))),al_map_rgb(0,0,0));
+                     al_draw_filled_triangle(px1,py1,px2,py2,px2-10*cos(-M_PI_2+atan2((yf-yi),(xf-xi))),py2-10*sin(-M_PI_2+atan2((yf-yi),(xf-xi))),al_map_rgb(0,0,0));  //dibujo la flecha
                      al_draw_filled_triangle(px1,py1,px2,py2,px2+10*cos(-M_PI_2+atan2((yf-yi),(xf-xi))),py2+10*sin(-M_PI_2+atan2((yf-yi),(xf-xi))),al_map_rgb(0,0,0));
              }
           } 
