@@ -18,19 +18,21 @@
 #include "arrdinamico.h"
 
 const float FPS = 60;
-const int SCREEN_W = 1000;
+const int SCREEN_W = 1000;                                  //tamaño de la pantalla
 const int SCREEN_H = 700;
-const int IMG_SIZE = 92;
-const int BUTTON_SIZE_W = 250;
+const int IMG_SIZE = 92;                                    //tamaño de la imagen que representa los estados
+const int BUTTON_SIZE_W = 250;                              //el tamaño de los botones, si se quiere usar otros botones, basta con cambiar las dos constantes
 const int BUTTON_SIZE_H = 54;
-const int BUTTONS_COLUMN = 725;
-const int BUTTON1_FILE = 50;
+const int BUTTONS_COLUMN = 725;                             //me define en que columna pongo los botones
+const int BUTTON1_FILE = 50;                                //constantes que me definen en que filas pongo los botones
 const int BUTTON2_FILE = 130;
 const int BUTTON3_FILE = 210;
 const int BUTTON4_FILE = 300;
 const int BUTTON5_FILE = 380;
 const int BUTTON6_FILE = 460;
 const int BUTTON_MAKEFILE_FILE = 570;
+const int ARROW_WIDTH = 30;                                 //para cambiar el tamaño de la flecha en las lineas de transiciones
+const int ARROW_HEIGHT = 20;
 
 int main(int argc, char **argv){
  
@@ -42,18 +44,17 @@ int main(int argc, char **argv){
    ALLEGRO_BITMAP *borrartransicion = NULL;
    ALLEGRO_BITMAP *borrarfuncion = NULL;
    ALLEGRO_BITMAP *makefile = NULL;
-   ALLEGRO_BITMAP *blankspace = NULL;
    ALLEGRO_BITMAP *arrow = NULL;
    ALLEGRO_EVENT_QUEUE *event_queue = NULL;
    ALLEGRO_TIMER *timer = NULL;
-   bool key[4] = { false, false, false, false };
+   
    bool redraw = true;
    bool doexit = false;
    float spline[]={50,50,150,70,60,450,650,700};
    char number[1];
    char c;
    char def[]={"default"};
-   int mousestate = 0;
+   int mousestate = 0;              //me define si el mouse esta presionado o no
    int newstate = 0;
    int newtransicion = 0;
    int origentransicion = -1;       //pongo en valor default ya que se puede confundir con el estado 0
@@ -86,6 +87,14 @@ int main(int argc, char **argv){
                                  NULL, ALLEGRO_MESSAGEBOX_ERROR);
       return 0;
    }
+   
+   const ALLEGRO_COLOR MYRED = al_map_rgb(255, 0, 0);               //en el caso de que se quiera cambiar el color de la pantalla y de las lineas
+   const ALLEGRO_COLOR MYWHITE = al_map_rgb(255, 255, 255);
+   const ALLEGRO_COLOR MYBLACK = al_map_rgb(0, 0, 0);
+   const ALLEGRO_COLOR MYBLUE = al_map_rgb(0, 0, 255);
+   const ALLEGRO_COLOR MYLIGHTGREEN = al_map_rgb(0, 255, 0);
+   
+   ALLEGRO_COLOR myArrowColor = MYBLUE;                                //defino el color de flecha que voy a utilizar
    
    if(!al_install_keyboard()) {
     fprintf(stderr, "No se pudo inicializar el teclado!\n");
@@ -130,7 +139,6 @@ int main(int argc, char **argv){
    borrarfuncion = al_load_bitmap("borrarfuncion.png");
    borrartransicion = al_load_bitmap("borrartransicion.png");
    makefile = al_load_bitmap("makefile.png");
-   blankspace = al_load_bitmap("blankspace.png");
    arrow = al_load_bitmap("arrow.png");
    
    if(!nuevoestado || !nuevafuncion || !nuevatransicion || !borrarestado || !borrarfuncion || !borrartransicion || !makefile || !arrow) {
@@ -140,14 +148,14 @@ int main(int argc, char **argv){
       return -1;
    }
 
-   ALLEGRO_FONT *font = al_load_ttf_font("serif.ttf",20,0);
+   ALLEGRO_FONT *font = al_load_ttf_font("serif.ttf",20,0);  
  
    if (!font){
       fprintf(stderr, "Could not load 'serif.ttf'.\n");
       return -1;
    }
    
-   al_set_target_bitmap(al_get_backbuffer(display));
+   al_set_target_bitmap(al_get_backbuffer(display));            //creo el buffer en donde voy a poner los eventos del display, del timer, del mouse y del teclado
    
    event_queue = al_create_event_queue();
    
@@ -166,13 +174,13 @@ int main(int argc, char **argv){
 
    al_register_event_source(event_queue, al_get_mouse_event_source());
     
-   al_init_primitives_addon();
+   al_init_primitives_addon();                                             //inicializo el addon de primitivas de lo contrario no voy a poder dibujar las flechas
 
-   al_clear_to_color(al_map_rgb(255,255,255));
+   al_clear_to_color(MYWHITE);                                              //pongo la pantalla en blanco
  
    al_flip_display(); 
  
-   al_start_timer(timer); //no olvidar!!!!!
+   al_start_timer(timer); //arranco con el timer
  
     while(1)
    {
@@ -185,7 +193,7 @@ int main(int argc, char **argv){
       else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE) {
          break;
       }
-      else if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {
+      else if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) {     //en el caso de que haga click, puede pasar que el usuario quiera mover un estado, o usar la botonera
        
        for(n=0;n<contadordeestados;n++){        //para mover todas las bolitas de estado que estan en la pantallas
             if(((ev.mouse.x)<(leerestado(n,listadeestados)->estado_x+IMG_SIZE)) && (((ev.mouse.y)<(leerestado(n,listadeestados)->estado_y+IMG_SIZE))) 
@@ -313,33 +321,33 @@ int main(int argc, char **argv){
       if(redraw && al_is_event_queue_empty(event_queue)) {
          redraw = false; //cando ya dibuje, espero de nuevo al timer
  
-         al_clear_to_color(al_map_rgb(255,255,255));
+         al_clear_to_color(MYWHITE);
          
          if(contadordefunciones>0){                             //dibujo las transiciones y las flechas
                  for(n=0;n<contadordefunciones;n++){
-                     xi=(leerestado(leerfuncion(n,listadetransiciones)->origin,listadeestados))->estado_x+IMG_SIZE/2;
+                     xi=(leerestado(leerfuncion(n,listadetransiciones)->origin,listadeestados))->estado_x+IMG_SIZE/2;   //defino las coordenadas (¡centrales!) de los estados de origen y destino
                      yi=(leerestado(leerfuncion(n,listadetransiciones)->origin,listadeestados))->estado_y+IMG_SIZE/2;
                      xf=(leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_x+IMG_SIZE/2;
                      yf=(leerestado(leerfuncion(n,listadetransiciones)->destiny,listadeestados))->estado_y+IMG_SIZE/2;
                      px1=xf-((IMG_SIZE-10)/2)*cos(atan2((yf-yi),(xf-xi)));           //punto en la periferia del globito que coincide con la linea de union entre globitos
                      py1=yf-((IMG_SIZE-10)/2)*sin(atan2((yf-yi),(xf-xi)));
-                     px2=xf-(((IMG_SIZE-10)/2)+30)*cos(atan2((yf-yi),(xf-xi)));      
-                     py2=yf-(((IMG_SIZE-10)/2)+30)*sin(atan2((yf-yi),(xf-xi)));
-                     al_draw_line(xi,yi,xf,yf,al_map_rgb(0,0,0),4);
-                     al_draw_filled_triangle(px1,py1,px2,py2,px2-10*cos(-M_PI_2+atan2((yf-yi),(xf-xi))),py2-10*sin(-M_PI_2+atan2((yf-yi),(xf-xi))),al_map_rgb(0,0,0));  //dibujo la flecha
-                     al_draw_filled_triangle(px1,py1,px2,py2,px2+10*cos(-M_PI_2+atan2((yf-yi),(xf-xi))),py2+10*sin(-M_PI_2+atan2((yf-yi),(xf-xi))),al_map_rgb(0,0,0));
+                     px2=xf-(((IMG_SIZE-10)/2)+ARROW_WIDTH)*cos(atan2((yf-yi),(xf-xi)));      //punto del otro extremo de la flecha
+                     py2=yf-(((IMG_SIZE-10)/2)+ARROW_WIDTH)*sin(atan2((yf-yi),(xf-xi)));
+                     al_draw_line(xi,yi,xf,yf,myArrowColor,4);
+                     al_draw_filled_triangle(px1,py1,px2,py2,px2-10*cos(-M_PI_2+atan2((yf-yi),(xf-xi))),py2-ARROW_HEIGHT/2*sin(-M_PI_2+atan2((yf-yi),(xf-xi))),myArrowColor);  //dibujo la flecha mediante dos triangulos
+                     al_draw_filled_triangle(px1,py1,px2,py2,px2+10*cos(-M_PI_2+atan2((yf-yi),(xf-xi))),py2+ARROW_HEIGHT/2*sin(-M_PI_2+atan2((yf-yi),(xf-xi))),myArrowColor);
              }
           } 
          
          if(var==1)
          {
-             for(n=0;n<contadordeestados;n++){
+             for(n=0;n<contadordeestados;n++){          //dibujo todos los estados en la pantalla: en el caso que dos estados se superpongan, tiene prioridad el mas recientemente creado para mostrarse ya que fue el ultimo en dibujarse (lo mismo se aplica para moverlo)
                 al_draw_bitmap(leerestado(n,listadeestados)->estadoimg, leerestado(n,listadeestados)->estado_x, leerestado(n,listadeestados)->estado_y, 0);
-                al_draw_text(font, al_map_rgb(255,255,255),leerestado(n,listadeestados)->estado_x+75, leerestado(n,listadeestados)->estado_y+35, ALLEGRO_ALIGN_CENTER, itoa(leerestado(n,listadeestados)->cont,number,10));
+                al_draw_text(font,MYWHITE,leerestado(n,listadeestados)->estado_x+75, leerestado(n,listadeestados)->estado_y+35, ALLEGRO_ALIGN_CENTER, itoa(leerestado(n,listadeestados)->cont,number,10));
              } 
          }
  
-         al_draw_bitmap(nuevoestado, BUTTONS_COLUMN, BUTTON1_FILE, 0);
+         al_draw_bitmap(nuevoestado, BUTTONS_COLUMN, BUTTON1_FILE, 0);          //dibujo todos los botones
          al_draw_bitmap(nuevatransicion, BUTTONS_COLUMN, BUTTON2_FILE, 0);
          al_draw_bitmap(nuevafuncion, BUTTONS_COLUMN, BUTTON3_FILE, 0);
          al_draw_bitmap(borrarestado, BUTTONS_COLUMN, BUTTON4_FILE, 0);
@@ -351,20 +359,20 @@ int main(int argc, char **argv){
 /*       //grilla (opcional)
          for(n=(IMG_SIZE)/2;n<(SCREEN_W-BUTTON_SIZE_W);n=n+IMG_SIZE)
          {
-           al_draw_line(n,0,n,7.5*IMG_SIZE,al_map_rgb(0,255,0),2);             
+           al_draw_line(n,0,n,7.5*IMG_SIZE,MYLIGHTGREEN,2);             
          }
          
          for(n=(IMG_SIZE)/2;n<SCREEN_H;n=n+IMG_SIZE)
          {
-           al_draw_line(0,n,7.5*IMG_SIZE,n,al_map_rgb(0,255,0),2);             
+           al_draw_line(0,n,7.5*IMG_SIZE,n,MYLIGHTGREEN,2);             
          }
 */
 
-         al_flip_display();
+         al_flip_display();     //pongo todo los dibujos en pantalla
       }
    }
 
-   for(n=0;n<contadordeestados;n++){
+   for(n=0;n<contadordeestados;n++){                                    //libero todos los recursos usados por todos los bitmaps, la fuente, etc...
         al_destroy_bitmap(leerestado(n,listadeestados)->estadoimg);
    }
    al_destroy_font(font);
