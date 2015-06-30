@@ -14,6 +14,7 @@ struct estado{
     float estado_y;
     ALLEGRO_BITMAP *estadoimg;
     int cont;
+    char name[20];
     miestado *next;
 };
 
@@ -21,6 +22,7 @@ typedef struct funcion mifuncion;
 struct funcion{
     int origin;
     int destiny;
+    int cont;
     char origen[20];
     char destino[20];
     char event[20];
@@ -38,7 +40,9 @@ miestado* ultimoestado(miestado *p2state);
 void delblock(int num_of_block_to_del,miestado *lista);
 
 mifuncion* getfun(char argv[],mifuncion* header);
+
 void agregarfuncion(mifuncion** p2state);
+void quitarfuncion(int num_of_block_to_del,mifuncion *lista);
 mifuncion* leerfuncion(int numofstate, mifuncion *p2state);
 
 #endif	/* ARRDINAMICO_H */
