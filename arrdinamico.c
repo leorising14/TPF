@@ -240,12 +240,11 @@ int createfsm(miestado* p2e, mifuncion* p2f)
         
         while(running)
         {            
-            fprintf(p2file,"STATE %s[]=\n{\n",estado_actual->name);
+            fprintf(p2file,"STATE estado_%d[]=\n{\n",estado_actual->cont);
             
             for (i=0;recorrer_fun!=NULL;recorrer_fun=recorrer_fun->next)
             {
                 if(recorrer_fun->origin==estado_actual->cont)
-                   fprintf(p2file,"\t{%s,%s,%s},\n",recorrer_fun->event,recorrer_fun->destino,recorrer_fun->name);
                 
             }
 	    fprintf(p2file,"\t{FIN_TABLA,estado_0,reset_FSM}\n}\n\n");
