@@ -215,3 +215,46 @@ void quitarfuncion(int num_of_block_to_del,mifuncion *lista){
     free(recorrer);
     }
 }
+
+int createfsm(miestado* p2e, mifuncion* p2f)
+{
+        FILE *p2file;   // pointers to file
+
+   if ((p2file= fopen("mqestado.c", "wb"))
+	   == NULL)
+   {
+	  fprintf(stderr, "Cannot open input file.\n");
+	  return -1;
+   }
+        int i;
+        int running=1;
+        
+        miestado *estado_actual=p2e;
+        mifuncion* recorrer_fun=p2f;
+        
+        if(estado_actual==NULL || recorrer_fun==NULL)
+        {
+            fprintf(stderr, "No es posible hacer la maquina de estados. No se encuentran estados o transiciones existentes.\n");
+            return -1;
+        }
+        
+        while(running)
+        {            
+            fprintf(p2file,"STATE %s[]=\n{\n",estado_actual->name);
+            
+            for (i=0;recorrer_fun!=NULL;recorrer_fun=recorrer_fun->next)
+            {
+                if(recorrer_fun->origin==estado_actual->cont)
+                   fprintf(p2file,"\t{%s,%s,%s},\n",recorrer_fun->event,recorrer_fun->destino,recorrer_fun->name);
+                
+            }
+	    fprintf(p2file,"\t{FIN_TABLA,estado_0,reset_FSM}\n}\n\n");
+            estado_actual=estado_actual->next;
+            recorrer_fun=p2f;
+            
+            if(estado_actual==NULL)
+                running=0;
+        }
+        fclose(p2file);
+	return 0;
+}

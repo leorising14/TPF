@@ -314,7 +314,7 @@ int main(int argc, char **argv){
           erasefunction = 0;                                       //para que se ejecute una sola vez cuando presione el boton
       }else if((newmakefile == 1)){        //en el caso de que se haya apretado el boton de hacer makefile
           printf("Se esta por generar el makefile! \n");
-          
+          createfsm(listadeestados, listadetransiciones);
           newmakefile = 0;                                       //para que se ejecute una sola vez cuando presione el boton
       }
  
