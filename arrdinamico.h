@@ -23,14 +23,11 @@ struct funcion{
     int origin;
     int destiny;
     int cont;
-    char* origen;
-    char* destino;
-    char event[20];
+    char* event;
     char* name;
     mifuncion* next;
     //mifuncion *prev;
 };
-
 
 void agregarestado(miestado** p2state);
 void quitarestado(miestado** p2state);
@@ -44,6 +41,9 @@ mifuncion* getfun(char argv[],mifuncion* header);
 void agregarfuncion(mifuncion** p2state);
 void quitarfuncion(int num_of_block_to_del,mifuncion *lista);
 mifuncion* leerfuncion(int numofstate, mifuncion *p2state);
+
+int createfsm(miestado* p2e, mifuncion* p2f, int cantestados, int cantfunciones);
+int createmakefile (miestado* p2e, mifuncion* p2f, int cantestados, int cantfunciones);
 
 #endif	/* ARRDINAMICO_H */
 

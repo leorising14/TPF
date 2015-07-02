@@ -24,6 +24,7 @@ void agregarestado(miestado** p2state) //lista es el  puntero al primer elemento
     {
         (*p2state) = calloc(1, sizeof(miestado));
         ((*p2state) -> next) = NULL;
+        
     }else
     {
         agregarestado(&((*p2state)->next));
@@ -89,12 +90,9 @@ miestado* ultimoestado(miestado *p2state)
 
 void delblock(int num_of_block_to_del,miestado *lista){
     int i=num_of_block_to_del;
+    
     miestado *recorrer=lista;
     miestado *anterior=lista;
-    if(num_of_block_to_del==0){
-        recorrer=(recorrer->next);
-        free(recorrer);
-    }else{
     for (;(recorrer->cont)<(num_of_block_to_del-1);recorrer=recorrer->next){}
     anterior=recorrer;
     recorrer=recorrer->next;  
@@ -105,7 +103,7 @@ void delblock(int num_of_block_to_del,miestado *lista){
     }
     anterior->cont=i;               //seteo el contador en el ultimo que no es considerado
     free(recorrer);
-    }
+    
 }
 
 
@@ -216,18 +214,20 @@ void quitarfuncion(int num_of_block_to_del,mifuncion *lista){
     }
 }
 
-int createfsm(miestado* p2e, mifuncion* p2f)
+int createfsm(miestado* p2e, mifuncion* p2f, int cantestados, int cantfunciones)
 {
-        FILE *p2file;   // pointers to file
+        FILE* p2table;   // pointers to file
 
-   if ((p2file= fopen("mqestado.c", "wb"))
+   if ((p2table= fopen("./output/fsm.c", "w+"))
 	   == NULL)
    {
-	  fprintf(stderr, "Cannot open input file.\n");
+	  printf("Cannot open input file.\n");
 	  return -1;
    }
         int i;
         int running=1;
+        
+        fprintf(p2table, "#include<stdio.h>\n#include\"fsm.h\"\n\n");
         
         miestado *estado_actual=p2e;
         mifuncion* recorrer_fun=p2f;
@@ -238,22 +238,79 @@ int createfsm(miestado* p2e, mifuncion* p2f)
             return -1;
         }
         
+        for(i=0;i<cantestados;i++)
+        {
+            fprintf(p2table,"extern STATE %s[];\n",estado_actual->name);
+            estado_actual=estado_actual->next;
+        }
+        
+        fprintf(p2table, "\n\n");
+        estado_actual=p2e;
+        
+        for(i=0;i<cantfunciones;i++)
+        {
+            fprintf(p2table,"void %s (void);\n",recorrer_fun->name);
+            recorrer_fun=recorrer_fun->next;
+        }
+        
+        fprintf(p2table, "void reset_FSM (void);\n");
+        
+        fprintf(p2table, "\n\n");
+        recorrer_fun=p2f;
+        
         while(running)
         {            
-            fprintf(p2file,"STATE estado_%d[]=\n{\n",estado_actual->cont);
+            fprintf(p2table,"STATE %s[]=\n{\n",estado_actual->name);
             
             for (i=0;recorrer_fun!=NULL;recorrer_fun=recorrer_fun->next)
             {
-                if(recorrer_fun->origin==estado_actual->cont){}
-                
+                if(recorrer_fun->origin==estado_actual->cont)
+                    fprintf(p2table, "\t{%s,%s,%s},\n",recorrer_fun->event, leerestado(recorrer_fun->destiny,p2e)->name, recorrer_fun->name);
             }
-	    fprintf(p2file,"\t{FIN_TABLA,estado_0,reset_FSM}\n}\n\n");
+	    fprintf(p2table,"\t{FIN_TABLA,%s,reset_FSM}\n}\n\n", leerestado(0, p2e)->name);
             estado_actual=estado_actual->next;
             recorrer_fun=p2f;
             
             if(estado_actual==NULL)
                 running=0;
         }
-        fclose(p2file);
-	return 0;
+        
+        fprintf(p2table, "void reset_FSM (void)\n{\n\tprintf(\"Reset\");\n}\n\n");
+        fprintf(p2table, "STATE* FSM_GetInitState(void)\n{\n\treturn (%s);\n}\n", p2e->name);
+        fclose(p2table);
+        
+        return 0;
+}
+
+int createmakefile (miestado* p2e, mifuncion* p2f, int cantestados, int cantfunciones)
+{
+   FILE* p2makefile;   // pointers to file
+
+   if ((p2makefile= fopen("./output/makefile", "w+"))
+	   == NULL)
+   {
+	  printf("Cannot open input file.\n");
+	  return -1;
+   }
+   
+   int i;
+   mifuncion* recorrer_fun=p2f;
+        
+   fprintf(p2makefile, "makefile: main.c fsm.c fsm.h ");
+   for(i=0; i<cantfunciones; i++)
+   {
+       fprintf(p2makefile, "%s.c ", recorrer_fun->name);
+       recorrer_fun=recorrer_fun->next;
+   }
+   
+   fprintf(p2makefile, "\n\tgcc -o main main.c fsm.c ");
+   recorrer_fun=p2f;
+   for(i=0; i<cantfunciones; i++)
+   {
+       fprintf(p2makefile, "%s.c ", recorrer_fun->name);
+       recorrer_fun=recorrer_fun->next;
+   }
+   
+   fclose(p2makefile);
+   return 0;
 }

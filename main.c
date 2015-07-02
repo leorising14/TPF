@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <conio.h>
+//#include <conio.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_native_dialog.h>
@@ -54,6 +54,7 @@ int main(int argc, char **argv){
    float spline[]={50,50,150,70,60,450,650,700};
    char number[1];
    char c[20];
+   char strfun[20];
    char string1[20];
    char string2[20];
    char def[]={"default"};
@@ -277,9 +278,16 @@ int main(int argc, char **argv){
           }
           
           printf("Ingrese el nombre del estado: ");
-          for(n=0;(c[n] = getchar())!='\n';n++){};
-          c[n]='\0';
-          leerestado(contadordeestados,listadeestados)->name = c;          
+          
+          for(n=0;(strfun[n] = getchar())!='\n';n++){};
+          strfun[n]='\0';
+          
+          char* p2char=(char*)malloc(20);
+          strcpy(p2char,strfun);
+          leerestado(contadordeestados,listadeestados)->name=p2char;
+          
+    //      for(n=0;n<contadordeestados+1;n++)
+    //          printf("%s\n",leerestado(n,listadeestados)->name );
           
           contadordeestados++;
           newstate=0;                                       //para que se ejecute una sola vez cuando presione el boton
@@ -296,19 +304,32 @@ int main(int argc, char **argv){
           agregarfuncion(&listadetransiciones);
           leerfuncion(contadordefunciones,listadetransiciones)->origin = origentransicion;
           leerfuncion(contadordefunciones,listadetransiciones)->destiny = destinotransicion;
-          leerfuncion(contadordefunciones,listadetransiciones)->origen = leerestado(origentransicion,listadeestados)->name;
-          leerfuncion(contadordefunciones,listadetransiciones)->destino = leerestado(destinotransicion,listadeestados)->name;
+          //leerfuncion(contadordefunciones,listadetransiciones)->origen = leerestado(origentransicion,listadeestados)->name;
+          //leerfuncion(contadordefunciones,listadetransiciones)->destino = leerestado(destinotransicion,listadeestados)->name;
           
-
+          printf("Ingrese el nombre del evento: ");
+          
+          for(n=0;(strfun[n] = getchar())!='\n';n++){};
+          strfun[n]='\0';
+          
+          char* p2char=(char*)malloc(20);
+          strcpy(p2char,strfun);
+          leerfuncion(contadordefunciones,listadetransiciones)->event=p2char;
+          
+          
           newtransicion = 0;                                       //para que se ejecute una sola vez cuando presione el boton
           origentransicion = -1;                                    //vuelvo al valor default de origen y destino
           destinotransicion = -1;
+          
+          
           contadordefunciones++;
       }else if((newfunction == 1)){        //en el caso de que se haya apretado el boton de agregar funcion
           printf("Agregue funcion\n");
           printf("Ingrese el nombre de la funcion: ");           
-          for(n=0;(c[n] = getchar())!='\n';n++){};
-          c[n]='\0';
+          for(n=0;(strfun[n] = getchar())!='\n';n++){};
+          strfun[n]='\0';
+          
+
           
           printf("Ingrese el nombre del estado de salida: ");           
           for(n=0;(string1[n] = getchar())!='\n';n++){};
@@ -319,11 +340,16 @@ int main(int argc, char **argv){
           string2[n]='\0';
           
           for(n=0;n<contadordefunciones;n++){
-              printf("%d\n",strcmp(string1,leerfuncion(n,listadetransiciones)->origen));
-              if(strcmp(string1,leerfuncion(n,listadetransiciones)->origen)==0){
-                  if(strcmp(string2,leerfuncion(n,listadetransiciones)->destino)==0){
-                    leerfuncion(n,listadetransiciones)->name = c;
-                    printf("Su funcion es: %s\n",leerfuncion(n,listadetransiciones)->name);                      
+              printf("%d\n",strcmp(string1,leerestado((leerfuncion(n,listadetransiciones)->origin),listadeestados)->name));
+              printf("%d\n",strcmp(string2,leerestado((leerfuncion(n,listadetransiciones)->destiny),listadeestados)->name));
+              if(strcmp(string1,leerestado((leerfuncion(n,listadetransiciones)->origin),listadeestados)->name)==0){
+                  if(strcmp(string2,leerestado((leerfuncion(n,listadetransiciones)->destiny),listadeestados)->name)==0)
+                  {
+                    char* p2char2=(char*)malloc(20);
+                    strcpy(p2char2,strfun);
+                    leerfuncion(n,listadetransiciones)->name = p2char2;
+                    printf("Su funcion es: %s\n",leerfuncion(n,listadetransiciones)->name);
+                    
                   }
               }
           }
@@ -331,8 +357,11 @@ int main(int argc, char **argv){
           newfunction = 0;                                       //para que se ejecute una sola vez cuando presione el boton
       }else if((erasestate == 1)){        //en el caso de que se haya apretado el boton de borrar estado
           printf("Borre estado \n");
+          if(estadoactual==0)
+              listadeestados=listadeestados->next;
+          else
+              delblock(estadoactual,listadeestados);
           
-          delblock(estadoactual,listadeestados);
           contadordeestados--;
           
           erasestate = 0;                                       //para que se ejecute una sola vez cuando presione el boton
@@ -346,7 +375,8 @@ int main(int argc, char **argv){
           erasefunction = 0;                                       //para que se ejecute una sola vez cuando presione el boton
       }else if((newmakefile == 1)){        //en el caso de que se haya apretado el boton de hacer makefile
           printf("Se esta por generar el makefile! \n");
-          createfsm(listadeestados, listadetransiciones);
+          createfsm(listadeestados, listadetransiciones, contadordeestados, contadordefunciones);
+          createmakefile(listadeestados, listadetransiciones, contadordeestados, contadordefunciones);
           newmakefile = 0;                                       //para que se ejecute una sola vez cuando presione el boton
       }
  
@@ -375,7 +405,7 @@ int main(int argc, char **argv){
          {
              for(n=0;n<contadordeestados;n++){          //dibujo todos los estados en la pantalla: en el caso que dos estados se superpongan, tiene prioridad el mas recientemente creado para mostrarse ya que fue el ultimo en dibujarse (lo mismo se aplica para moverlo)
                 al_draw_bitmap(leerestado(n,listadeestados)->estadoimg, leerestado(n,listadeestados)->estado_x, leerestado(n,listadeestados)->estado_y, 0);
-                al_draw_text(font,MYWHITE,leerestado(n,listadeestados)->estado_x+75, leerestado(n,listadeestados)->estado_y+35, ALLEGRO_ALIGN_CENTER, itoa(leerestado(n,listadeestados)->cont,number,10));
+                al_draw_text(font,MYWHITE,leerestado(n,listadeestados)->estado_x+35, leerestado(n,listadeestados)->estado_y+35, ALLEGRO_ALIGN_CENTER, leerestado(n,listadeestados)->name);
              } 
          }
  
