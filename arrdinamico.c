@@ -244,7 +244,7 @@ int createfsm(miestado* p2e, mifuncion* p2f)
             
             for (i=0;recorrer_fun!=NULL;recorrer_fun=recorrer_fun->next)
             {
-                if(recorrer_fun->origin==estado_actual->cont)
+                if(recorrer_fun->origin==estado_actual->cont){}
                 
             }
 	    fprintf(p2file,"\t{FIN_TABLA,estado_0,reset_FSM}\n}\n\n");

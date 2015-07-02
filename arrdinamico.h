@@ -14,7 +14,7 @@ struct estado{
     float estado_y;
     ALLEGRO_BITMAP *estadoimg;
     int cont;
-    char name[20];
+    char* name;
     miestado *next;
 };
 
@@ -23,10 +23,10 @@ struct funcion{
     int origin;
     int destiny;
     int cont;
-    char origen[20];
-    char destino[20];
+    char* origen;
+    char* destino;
     char event[20];
-    char name[20];
+    char* name;
     mifuncion* next;
     //mifuncion *prev;
 };

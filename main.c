@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <conio.h>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_native_dialog.h>
@@ -52,7 +53,9 @@ int main(int argc, char **argv){
    bool doexit = false;
    float spline[]={50,50,150,70,60,450,650,700};
    char number[1];
-   char c;
+   char c[20];
+   char string1[20];
+   char string2[20];
    char def[]={"default"};
    int mousestate = 0;              //me define si el mouse esta presionado o no
    int newstate = 0;
@@ -273,6 +276,11 @@ int main(int argc, char **argv){
             return -1;
           }
           
+          printf("Ingrese el nombre del estado: ");
+          for(n=0;(c[n] = getchar())!='\n';n++){};
+          c[n]='\0';
+          leerestado(contadordeestados,listadeestados)->name = c;          
+          
           contadordeestados++;
           newstate=0;                                       //para que se ejecute una sola vez cuando presione el boton
       }else if((newtransicion == 1) && (origentransicion != -1) && (destinotransicion != -1)){         //en el caso de que se haya apretado el boton de agregar transicion, y se hayan apretado los dos estados a unir
@@ -288,6 +296,9 @@ int main(int argc, char **argv){
           agregarfuncion(&listadetransiciones);
           leerfuncion(contadordefunciones,listadetransiciones)->origin = origentransicion;
           leerfuncion(contadordefunciones,listadetransiciones)->destiny = destinotransicion;
+          leerfuncion(contadordefunciones,listadetransiciones)->origen = leerestado(origentransicion,listadeestados)->name;
+          leerfuncion(contadordefunciones,listadetransiciones)->destino = leerestado(destinotransicion,listadeestados)->name;
+          
 
           newtransicion = 0;                                       //para que se ejecute una sola vez cuando presione el boton
           origentransicion = -1;                                    //vuelvo al valor default de origen y destino
@@ -295,7 +306,28 @@ int main(int argc, char **argv){
           contadordefunciones++;
       }else if((newfunction == 1)){        //en el caso de que se haya apretado el boton de agregar funcion
           printf("Agregue funcion\n");
+          printf("Ingrese el nombre de la funcion: ");           
+          for(n=0;(c[n] = getchar())!='\n';n++){};
+          c[n]='\0';
           
+          printf("Ingrese el nombre del estado de salida: ");           
+          for(n=0;(string1[n] = getchar())!='\n';n++){};
+          string1[n]='\0';
+          
+          printf("Ingrese el nombre del estado de llegada: ");           
+          for(n=0;(string2[n] = getchar())!='\n';n++){};
+          string2[n]='\0';
+          
+          for(n=0;n<contadordefunciones;n++){
+              printf("%d\n",strcmp(string1,leerfuncion(n,listadetransiciones)->origen));
+              if(strcmp(string1,leerfuncion(n,listadetransiciones)->origen)==0){
+                  if(strcmp(string2,leerfuncion(n,listadetransiciones)->destino)==0){
+                    leerfuncion(n,listadetransiciones)->name = c;
+                    printf("Su funcion es: %s\n",leerfuncion(n,listadetransiciones)->name);                      
+                  }
+              }
+          }
+
           newfunction = 0;                                       //para que se ejecute una sola vez cuando presione el boton
       }else if((erasestate == 1)){        //en el caso de que se haya apretado el boton de borrar estado
           printf("Borre estado \n");
