@@ -52,8 +52,6 @@ int main(int argc, char **argv){
    bool redraw = true;
    bool doexit = false;
    float spline[]={50,50,150,70,60,450,650,700};
-   char number[1];
-   char c[20];
    char strfun[20];
    char string1[20];
    char string2[20];
@@ -80,11 +78,12 @@ int main(int argc, char **argv){
    
    int var=0;
    int n=0;
+   int i=0;
+   int j=0;
    int contadordeestados=0;
    int contadordefunciones=0;
    int estadoactual=0;
    miestado* listadeestados = NULL;
-   miestado* listagenerica = NULL;
    mifuncion* listadetransiciones = NULL;
 
    if(!al_init()) {
@@ -205,7 +204,7 @@ int main(int argc, char **argv){
                && ((leerestado(n,listadeestados)->estado_x)<ev.mouse.x) && ((leerestado(n,listadeestados)->estado_y)<ev.mouse.y)){
                     mousestate = 1;
                     estadoactual = n;
-                    if(newtransicion == 1)
+                    if((newtransicion == 1) || (erasetransicion == 1))
                     {
                         if(origentransicion == -1)
                         {
@@ -297,16 +296,10 @@ int main(int argc, char **argv){
           printf("El origen de la transicion es: %d\n", origentransicion);
           printf("El destino de la transicion es: %d\n", destinotransicion);
           
-          //Aca modificaria todas las estructuras agregando la transicion
-          //while((c=getchar())!='\n'){
-          //    printf("%c\n",c);
-          //}
-
           agregarfuncion(&listadetransiciones);
           leerfuncion(contadordefunciones,listadetransiciones)->origin = origentransicion;
           leerfuncion(contadordefunciones,listadetransiciones)->destiny = destinotransicion;
-          //leerfuncion(contadordefunciones,listadetransiciones)->origen = leerestado(origentransicion,listadeestados)->name;
-          //leerfuncion(contadordefunciones,listadetransiciones)->destino = leerestado(destinotransicion,listadeestados)->name;
+          leerfuncion(contadordefunciones,listadetransiciones)->cont = contadordefunciones;
           
           printf("Ingrese el nombre del evento: ");
           
@@ -329,8 +322,6 @@ int main(int argc, char **argv){
           printf("Ingrese el nombre de la funcion: ");           
           for(n=0;(strfun[n] = getchar())!='\n';n++){};
           strfun[n]='\0';
-          
-
           
           printf("Ingrese el nombre del estado de salida: ");           
           for(n=0;(string1[n] = getchar())!='\n';n++){};
@@ -358,22 +349,88 @@ int main(int argc, char **argv){
           newfunction = 0;                                       //para que se ejecute una sola vez cuando presione el boton
       }else if((erasestate == 1)){        //en el caso de que se haya apretado el boton de borrar estado
           printf("Borre estado \n");
-          listadeestados=quitarestado(estadoactual,listadeestados); //me regresa el puntero nuevo de listadeestados (esto por si se elimina el primer estado)          
+          listadeestados=quitarestado(estadoactual,listadeestados); //me regresa el puntero nuevo de listadeestados (esto por si se elimina el primer estado)     
+          
+          for(n=0;n<contadordefunciones;n++){
+              if((leerfuncion(n,listadetransiciones)->origin == estadoactual) || (leerfuncion(n,listadetransiciones)->destiny == estadoactual)){
+               for(i=0;i<contadordefunciones;i++){
+                  if((leerfuncion(i,listadetransiciones)->origin > estadoactual)){      //si borre un estado, tengo que disminuir el contador de origen y destino en las transiciones
+                    leerfuncion(i,listadetransiciones)->origin--;
+                  }
+                  if((leerfuncion(i,listadetransiciones)->destiny > estadoactual)){
+                    leerfuncion(i,listadetransiciones)->destiny--;
+                  }
+               }
+              listadetransiciones = quitarfuncion(n,listadetransiciones);
+              n--;
+              contadordefunciones--;
+              }                  
+          }
+
           contadordeestados--;                                  //como se borro un estado, tengo uno menos!
           
           erasestate = 0;                                       //para que se ejecute una sola vez cuando presione el boton
-      }else if((erasetransicion == 1)){        //en el caso de que se haya apretado el boton de borrar transicion
+      }else if((erasetransicion == 1) && (origentransicion != -1) && (destinotransicion != -1)){        //en el caso de que se haya apretado el boton de borrar transicion
           printf("Borre transicion \n");
           
+          printf("Ingrese el nombre del evento a borrar: ");
+          
+          for(n=0;(strfun[n] = getchar())!='\n';n++){};
+          strfun[n]='\0';
+          
+          i=contadordefunciones;
+          for(n=0;n<contadordefunciones;n++){
+              if(((leerfuncion(n,listadetransiciones)->origin)==origentransicion) && ((leerfuncion(n,listadetransiciones)->destiny)==destinotransicion) && ((strcmp(strfun,leerfuncion(n,listadetransiciones)->event))==0)){
+                listadetransiciones=quitarfuncion(n,listadetransiciones);    
+                n--;
+                contadordefunciones--;
+              }
+          }
+          
+          if(i==contadordefunciones){
+              printf("Ud selecciono dos estados que no tienen transicion entre si, o un evento invalido. Intentelo nuevamente \n");
+          }
+    
           erasetransicion = 0;                                       //para que se ejecute una sola vez cuando presione el boton
+          origentransicion = -1;                                    //vuelvo al valor default de origen y destino
+          destinotransicion = -1;
       }else if((erasefunction == 1)){        //en el caso de que se haya apretado el boton de borrar funcion
           printf("Borre funcion \n");
+/*
+          printf("Ingrese el nombre de la funcion a borrar: ");           
+          for(n=0;(strfun[n] = getchar())!='\n';n++){};
+          strfun[n]='\0';
+          
+          printf("Ingrese el nombre del estado de salida: ");           
+          for(n=0;(string1[n] = getchar())!='\n';n++){};
+          string1[n]='\0';
+          
+          printf("Ingrese el nombre del estado de llegada: ");           
+          for(n=0;(string2[n] = getchar())!='\n';n++){};
+          string2[n]='\0';
+          
+          for(n=0;n<contadordefunciones;n++){
+              printf("%d\n",strcmp(string1,leerestado((leerfuncion(n,listadetransiciones)->origin),listadeestados)->name));
+              printf("%d\n",strcmp(string2,leerestado((leerfuncion(n,listadetransiciones)->destiny),listadeestados)->name));
+              if(strcmp(string1,leerestado((leerfuncion(n,listadetransiciones)->origin),listadeestados)->name)==0){
+                  if(strcmp(string2,leerestado((leerfuncion(n,listadetransiciones)->destiny),listadeestados)->name)==0)
+                  {
+                    char* p2char2=(char*)malloc(20);
+                    strcpy(p2char2,strfun);
+                    leerfuncion(n,listadetransiciones)->name = p2char2;
+                    printf("Su funcion es: %s\n",leerfuncion(n,listadetransiciones)->name);
+                    
+                  }
+              }
+          }
+*/
           
           erasefunction = 0;                                       //para que se ejecute una sola vez cuando presione el boton
       }else if((newmakefile == 1)){        //en el caso de que se haya apretado el boton de hacer makefile
           printf("Se esta por generar el makefile! \n");
           createfsm(listadeestados, listadetransiciones, contadordeestados, contadordefunciones);
           createmakefile(listadeestados, listadetransiciones, contadordeestados, contadordefunciones);
+          printf("Disfrute de su máquina de estados personalizada. \n");
           newmakefile = 0;                                       //para que se ejecute una sola vez cuando presione el boton
       }
  
@@ -415,6 +472,7 @@ int main(int argc, char **argv){
          al_draw_bitmap(borrartransicion, BUTTONS_COLUMN, BUTTON5_FILE, 0);
          al_draw_bitmap(borrarfuncion, BUTTONS_COLUMN, BUTTON6_FILE, 0);         
          al_draw_bitmap(makefile, BUTTONS_COLUMN, BUTTON_MAKEFILE_FILE, 0);
+         
          //al_draw_spline(spline,al_map_rgb(255,0,0),2);
          
 /*       //grilla (opcional)

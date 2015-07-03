@@ -45,11 +45,13 @@ miestado* quitarestado(int num_of_block_to_del,miestado *lista){
       free(recorrer->name);
       free(recorrer);
       recorrer=lista;
-      for(i=0;(recorrer->next)!=NULL;recorrer=recorrer->next){
-         recorrer->cont=i;
-         i++;
-      }
+      if(lista != NULL){                                            //en el caso de que solo este presente el primer estado
+        for(i=0;(recorrer->next)!=NULL;recorrer=recorrer->next){
+            recorrer->cont=i;
+            i++;
+        }
       recorrer->cont=i;
+      }
       return(lista);
     }else{
       recorrer=lista;
@@ -116,11 +118,13 @@ mifuncion* quitarfuncion(int num_of_block_to_del,mifuncion *lista){
       free(recorrer->event);
       free(recorrer);
       recorrer=lista;
+      if(lista != NULL){                                            //en el caso de que solo este presente el primer estado
       for(i=0;(recorrer->next)!=NULL;recorrer=recorrer->next){
          recorrer->cont=i;
          i++;
       }
       recorrer->cont=i;
+      }
       return(lista);
     }else{
       recorrer=lista;
