@@ -18,7 +18,8 @@ int main (void)
 {
 
      	char evento[20];
-
+	char c;
+	int n=0;
 	p2state=FSM_GetInitState();// Inicializo la FSM con el estado inicial
 
 	while((c = getchar())!= FIN_EVENTO){  //Si hay evento

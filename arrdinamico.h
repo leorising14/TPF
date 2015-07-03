@@ -37,9 +37,8 @@ void agregarfuncion(mifuncion** p2state);
 mifuncion* quitarfuncion(int num_of_block_to_del,mifuncion *lista);
 mifuncion* leerfuncion(int numofstate, mifuncion *p2state);
 
-int createfsm(miestado* p2e, mifuncion* p2f, int cantestados, int cantfunciones);
-int createmakefile (miestado* p2e, mifuncion* p2f, int cantestados, int cantfunciones);
 
-mifuncion* getfun(char argv[],mifuncion* header);
+
+//mifuncion* getfun(char argv[],mifuncion* header);
 #endif	/* ARRDINAMICO_H */
 

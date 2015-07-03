@@ -1,9 +1,20 @@
+/*
 /* 
- * File:   main.c
- * Author: Gabriel
- *
- * Created on 6 de junio de 2015, 17:23
+/
+/	TRABAJO PRÁCTICO FINAL: Generador de máquinas de estados	/
+/
+/*
+Grupo Nº 2:
+	Gabriel Cufaro
+	Leandro Luo
+	Bernardo Michel
+	Agustín De Ruschi
+ * 
+ * https://github.com/leorising14/TPF.git
+ * 
+ Created on 6 de junio de 2015, 17:23
  */
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,6 +28,7 @@
 #include <allegro5/allegro_ttf.h>
 
 #include "arrdinamico.h"
+#include "createfiles.h"
 
 const float FPS = 60;
 const int SCREEN_W = 1000;                                  //tamaño de la pantalla
@@ -52,10 +64,16 @@ int main(int argc, char **argv){
    bool redraw = true;
    bool doexit = false;
 
-   char strfun[20];
-   char string1[20];
-   char string2[20];
-   char string3[20];
+   char mimensaje1[]={"Ingrese el nombre del estado (no puede ser solo un numero "}; //strings que uso para mostrar mensajes en pantalla y escribir
+   char mimensaje2[]={"Ingrese el nombre del evento "};
+   char mimensaje3[]={"Ingrese el nombre de la funcion: "};
+   char mimensaje4[]={"Ingrese el nombre del estado de salida "};
+   char mimensaje5[]={"Ingrese el nombre del estado de llegada "};
+   char mimensaje6[]={"Ingrese el nombre del evento a borrar "};
+   char* strfun;
+   char* string1;
+   char* string2;
+   char* string3;
 
    int mousestate = 0;              //me define si el mouse esta presionado o no
    int newstate = 0;
@@ -77,7 +95,7 @@ int main(int argc, char **argv){
    int px2=0;
    int py2=0;
    
-   int var=0;
+   int var=0;                       //contadores varios
    int n=0;
    int i=0;
 
@@ -191,7 +209,7 @@ int main(int argc, char **argv){
    {
       ALLEGRO_EVENT ev;
       al_wait_for_event(event_queue, &ev);
- 
+     
       if(ev.type == ALLEGRO_EVENT_TIMER) {
          redraw = true;//redibujo cuando toca el timer
       }
@@ -278,10 +296,12 @@ int main(int argc, char **argv){
             return -1;
           }
           
-          printf("Ingrese el nombre del estado: ");
-          
+          printf("Ingrese el nombre del estado: "); //mensaje1
+          strfun = getcharallegro(display,font,mimensaje1);
+/*
           for(n=0;(strfun[n] = getchar())!='\n';n++){};
           strfun[n]='\0';
+*/
           
           char* p2char=(char*)malloc(20);
           strcpy(p2char,strfun);
@@ -302,10 +322,9 @@ int main(int argc, char **argv){
           leerfuncion(contadordefunciones,listadetransiciones)->destiny = destinotransicion;
           leerfuncion(contadordefunciones,listadetransiciones)->cont = contadordefunciones;
           
-          printf("Ingrese el nombre del evento: ");
+          printf("Ingrese el nombre del evento: "); //mensaje2
           
-          for(n=0;(strfun[n] = getchar())!='\n';n++){};
-          strfun[n]='\0';
+          strfun = getcharallegro(display,font,mimensaje2);
           
           char* p2char=(char*)malloc(20);
           strcpy(p2char,strfun);
@@ -321,20 +340,18 @@ int main(int argc, char **argv){
       }else if((newfunction == 1)){        //en el caso de que se haya apretado el boton de agregar funcion
           printf("Agregue funcion\n");
           printf("Ingrese el nombre de la funcion: ");           
-          for(n=0;(strfun[n] = getchar())!='\n';n++){};
-          strfun[n]='\0';
+          strfun = getcharallegro(display,font,mimensaje3);
           
           printf("Ingrese el nombre del estado de salida: ");           
-          for(n=0;(string1[n] = getchar())!='\n';n++){};
-          string1[n]='\0';
+          string1 = getcharallegro(display,font,mimensaje4);
           
           printf("Ingrese el nombre del estado de llegada: ");           
-          for(n=0;(string2[n] = getchar())!='\n';n++){};
-          string2[n]='\0';
+
+          string2 = getcharallegro(display,font,mimensaje5);
           
           for(n=0;n<contadordefunciones;n++){
-              printf("%d\n",strcmp(string1,leerestado((leerfuncion(n,listadetransiciones)->origin),listadeestados)->name));
-              printf("%d\n",strcmp(string2,leerestado((leerfuncion(n,listadetransiciones)->destiny),listadeestados)->name));
+              //printf("%d\n",strcmp(string1,leerestado((leerfuncion(n,listadetransiciones)->origin),listadeestados)->name));
+              //printf("%d\n",strcmp(string2,leerestado((leerfuncion(n,listadetransiciones)->destiny),listadeestados)->name));
               if(strcmp(string1,leerestado((leerfuncion(n,listadetransiciones)->origin),listadeestados)->name)==0){
                   if(strcmp(string2,leerestado((leerfuncion(n,listadetransiciones)->destiny),listadeestados)->name)==0)
                   {
@@ -344,7 +361,7 @@ int main(int argc, char **argv){
                     printf("Su funcion es: %s\n",leerfuncion(n,listadetransiciones)->name);
                     
                   }
-              }
+              }else printf("No se pudo crear la función porque no hay coincidencia con los nombres de los estados");
           }
 
           newfunction = 0;                                       //para que se ejecute una sola vez cuando presione el boton
@@ -376,8 +393,7 @@ int main(int argc, char **argv){
           
           printf("Ingrese el nombre del evento a borrar: ");
           
-          for(n=0;(strfun[n] = getchar())!='\n';n++){};
-          strfun[n]='\0';
+          strfun = getcharallegro(display,font, mimensaje6);
           
           i=contadordefunciones;
           for(n=0;n<contadordefunciones;n++){
@@ -400,17 +416,16 @@ int main(int argc, char **argv){
           
           
           printf("Ingrese el nombre del estado de salida: ");           
-          for(n=0;(string1[n] = getchar())!='\n';n++){};
-          string1[n]='\0';
+
+          string1 = getcharallegro(display,font, mimensaje4);
           
           printf("Ingrese el nombre del estado de llegada: ");           
-          for(n=0;(string2[n] = getchar())!='\n';n++){};
-          string2[n]='\0';
+
+          string2 = getcharallegro(display,font, mimensaje5);
           
           printf("Ingrese el nombre del evento: ");
           
-          for(n=0;(string3[n] = getchar())!='\n';n++){};
-          string3[n]='\0';
+          string3 = getcharallegro(display,font, mimensaje2);
           
           for(n=0;n<contadordefunciones;n++){
               //printf("%d\n",strcmp(string1,leerestado((leerfuncion(n,listadetransiciones)->origin),listadeestados)->name));
@@ -453,8 +468,9 @@ int main(int argc, char **argv){
                      al_draw_line(xi,yi,xf,yf,myArrowColor,4);
                      al_draw_filled_triangle(px1,py1,px2,py2,px2-10*cos(-M_PI_2+atan2((yf-yi),(xf-xi))),py2-ARROW_HEIGHT/2*sin(-M_PI_2+atan2((yf-yi),(xf-xi))),myArrowColor);  //dibujo la flecha mediante dos triangulos
                      al_draw_filled_triangle(px1,py1,px2,py2,px2+10*cos(-M_PI_2+atan2((yf-yi),(xf-xi))),py2+ARROW_HEIGHT/2*sin(-M_PI_2+atan2((yf-yi),(xf-xi))),myArrowColor);
+                     if((leerfuncion(n,listadetransiciones)->name) != NULL)
                      al_draw_text(font,MYBLACK,(xi+xf)/2,(yi+yf)/2,ALLEGRO_ALIGN_CENTER,leerfuncion(n,listadetransiciones)->name);
-                     al_draw_text(font,MYBLACK,xi+IMG_SIZE/2,yi+IMG_SIZE/2,ALLEGRO_ALIGN_LEFT,leerfuncion(n,listadetransiciones)->event);
+                     al_draw_text(font,MYBLACK,px1,py1+40,ALLEGRO_ALIGN_LEFT,leerfuncion(n,listadetransiciones)->event);
              }
           } 
          

@@ -5,6 +5,7 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>arrdinamico.h</itemPath>
+      <itemPath>createfiles.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -13,7 +14,9 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>allegrogetchar.c</itemPath>
       <itemPath>arrdinamico.c</itemPath>
+      <itemPath>createfiles.c</itemPath>
       <itemPath>main.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -50,13 +53,31 @@
       <compileType>
         <linkerTool>
           <linkerLibItems>
-            <linkerLibLibItem>allegro-5.0.10-monolith-mt</linkerLibLibItem>
+            <linkerOptionItem>`pkg-config --libs allegro-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_acodec-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_audio-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_color-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_dialog-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_font-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_image-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_main-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_memfile-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_physfs-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_primitives-5.0`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_ttf-5.0`</linkerOptionItem>
+            <linkerLibStdlibItem>Mathematics</linkerLibStdlibItem>
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="allegrogetchar.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="arrdinamico.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="arrdinamico.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="createfiles.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="createfiles.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>
@@ -81,9 +102,15 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="allegrogetchar.c" ex="false" tool="0" flavor2="0">
+      </item>
       <item path="arrdinamico.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="arrdinamico.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="createfiles.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="createfiles.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>

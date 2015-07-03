@@ -2,7 +2,7 @@
 #define FSM_H_
 
 
-#define FIN_TABLA 0xFF
+#define FIN_TABLA "Q"
 
 
 typedef struct tabla_estado STATE;
