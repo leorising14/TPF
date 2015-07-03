@@ -358,21 +358,8 @@ int main(int argc, char **argv){
           newfunction = 0;                                       //para que se ejecute una sola vez cuando presione el boton
       }else if((erasestate == 1)){        //en el caso de que se haya apretado el boton de borrar estado
           printf("Borre estado \n");
-          if(estadoactual==0){
-              listagenerica=listadeestados;
-              listadeestados=listadeestados->next;
-              free(listagenerica->name);
-              free(listagenerica);
-              listagenerica=listadeestados;
-              for(n=0;(listagenerica->next)!=NULL;listagenerica=listagenerica->next){
-                  listagenerica->cont=n;
-                  n++;
-              }
-              listagenerica->cont=n;
-          }else
-              delblock(estadoactual,listadeestados);
-          
-          contadordeestados--;
+          listadeestados=quitarestado(estadoactual,listadeestados); //me regresa el puntero nuevo de listadeestados (esto por si se elimina el primer estado)          
+          contadordeestados--;                                  //como se borro un estado, tengo uno menos!
           
           erasestate = 0;                                       //para que se ejecute una sola vez cuando presione el boton
       }else if((erasetransicion == 1)){        //en el caso de que se haya apretado el boton de borrar transicion

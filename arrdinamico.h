@@ -30,20 +30,16 @@ struct funcion{
 };
 
 void agregarestado(miestado** p2state);
-void quitarestado(miestado** p2state);
+miestado* quitarestado(int num_of_block_to_del,miestado *lista);
 miestado* leerestado(int numofstate, miestado *p2state);
-miestado* ultimoestado(miestado *p2state);
-
-void delblock(int num_of_block_to_del,miestado *lista);
-
-mifuncion* getfun(char argv[],mifuncion* header);
 
 void agregarfuncion(mifuncion** p2state);
-void quitarfuncion(int num_of_block_to_del,mifuncion *lista);
+mifuncion* quitarfuncion(int num_of_block_to_del,mifuncion *lista);
 mifuncion* leerfuncion(int numofstate, mifuncion *p2state);
 
 int createfsm(miestado* p2e, mifuncion* p2f, int cantestados, int cantfunciones);
 int createmakefile (miestado* p2e, mifuncion* p2f, int cantestados, int cantfunciones);
 
+mifuncion* getfun(char argv[],mifuncion* header);
 #endif	/* ARRDINAMICO_H */
 
