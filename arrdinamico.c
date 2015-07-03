@@ -165,7 +165,7 @@ int createfsm(miestado* p2e, mifuncion* p2f, int cantestados, int cantfunciones)
 {
         FILE* p2table;   // pointers to file
 
-   if ((p2table= fopen("./output/fsm.c", "w+"))
+   if ((p2table= fopen("./Output/fsmtable.c", "w+"))
 	   == NULL)
    {
 	  printf("Cannot open input file.\n");
@@ -233,7 +233,7 @@ int createmakefile (miestado* p2e, mifuncion* p2f, int cantestados, int cantfunc
 {
    FILE* p2makefile;   // pointers to file
 
-   if ((p2makefile= fopen("./output/makefile", "w+"))
+   if ((p2makefile= fopen("./Output/makefile", "w+"))
 	   == NULL)
    {
 	  printf("Cannot open input file.\n");
@@ -243,14 +243,14 @@ int createmakefile (miestado* p2e, mifuncion* p2f, int cantestados, int cantfunc
    int i;
    mifuncion* recorrer_fun=p2f;
         
-   fprintf(p2makefile, "makefile: main.c fsm.c fsm.h ");
+   fprintf(p2makefile, "makefile: main.c fsm.c fsm.h fsmtable.c contador.c contador.h termlib.c termlib.h");
    for(i=0; i<cantfunciones; i++)
    {
        fprintf(p2makefile, "%s.c ", recorrer_fun->name);
        recorrer_fun=recorrer_fun->next;
    }
    
-   fprintf(p2makefile, "\n\tgcc -o main main.c fsm.c ");
+   fprintf(p2makefile, "\n\tgcc -o ppal ppal.c fsm.c ");
    recorrer_fun=p2f;
    for(i=0; i<cantfunciones; i++)
    {

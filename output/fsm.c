@@ -1,31 +1,22 @@
-#include<stdio.h>
-#include"fsm.h"
-
-extern STATE hola[];
-extern STATE nuevo[];
+#include <stdio.h>
+#include "fsm.h"
 
 
-void (null) (void);
-void reset_FSM (void);
 
-
-STATE hola[]=
+STATE* fsm(STATE *p_tabla_estado,char* evento_actual)
 {
-	{5,nuevo,(null)},
-	{FIN_TABLA,hola,reset_FSM}
+
+      printf(" >>%s<<\n ",evento_actual); //just for test (debug)
+   	while (p_tabla_estado -> evento != evento_actual		//Recorre las tablas de estado
+		   && p_tabla_estado -> evento != FIN_TABLA)
+		++p_tabla_estado;
+      (*p_tabla_estado -> p_rut_accion) ();          /*rutina de accion corresondiente*/
+      p_tabla_estado=p_tabla_estado -> prx_estado;   /*siguiente estado*/
+
+
+      return(p_tabla_estado);
+
 }
 
-STATE nuevo[]=
-{
-	{FIN_TABLA,hola,reset_FSM}
-}
 
-void reset_FSM (void)
-{
-	printf("Reset");
-}
 
-STATE* FSM_GetInitState(void)
-{
-	return (hola);
-}
