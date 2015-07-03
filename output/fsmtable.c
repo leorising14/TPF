@@ -1,44 +1,24 @@
 #include<stdio.h>
 #include"fsm.h"
 
-extern STATE 0[];
-extern STATE 1[];
-extern STATE 2[];
-extern STATE 3[];
+extern STATE estado0[];
+extern STATE estado1[];
 
 
-void hola (void);
-void alñkdhf (void);
-void 983fasoivy84 (void);
-void chau (void);
-void hola2 (void);
+void dummy (void);
 void reset_FSM (void);
 
 
-STATE 0[]=
+STATE estado0[]=
 {
-	{a,1,hola},
-	{t,2,hola2},
-	{FIN_TABLA,0,reset_FSM}
-}
+	{ev1,estado1,dummy},
+	{FIN_TABLA,estado0,reset_FSM}
+};
 
-STATE 1[]=
+STATE estado1[]=
 {
-	{s,2,alñkdhf},
-	{FIN_TABLA,0,reset_FSM}
-}
-
-STATE 2[]=
-{
-	{d,3,983fasoivy84},
-	{FIN_TABLA,0,reset_FSM}
-}
-
-STATE 3[]=
-{
-	{f,0,chau},
-	{FIN_TABLA,0,reset_FSM}
-}
+	{FIN_TABLA,estado0,reset_FSM}
+};
 
 void reset_FSM (void)
 {
@@ -47,5 +27,5 @@ void reset_FSM (void)
 
 STATE* FSM_GetInitState(void)
 {
-	return (0);
+	return (estado0);
 }

@@ -51,11 +51,12 @@ int main(int argc, char **argv){
    
    bool redraw = true;
    bool doexit = false;
-   float spline[]={50,50,150,70,60,450,650,700};
+
    char strfun[20];
    char string1[20];
    char string2[20];
-   char def[]={"default"};
+   char string3[20];
+
    int mousestate = 0;              //me define si el mouse esta presionado o no
    int newstate = 0;
    int newtransicion = 0;
@@ -79,7 +80,7 @@ int main(int argc, char **argv){
    int var=0;
    int n=0;
    int i=0;
-   int j=0;
+
    int contadordeestados=0;
    int contadordefunciones=0;
    int estadoactual=0;
@@ -396,10 +397,7 @@ int main(int argc, char **argv){
           destinotransicion = -1;
       }else if((erasefunction == 1)){        //en el caso de que se haya apretado el boton de borrar funcion
           printf("Borre funcion \n");
-/*
-          printf("Ingrese el nombre de la funcion a borrar: ");           
-          for(n=0;(strfun[n] = getchar())!='\n';n++){};
-          strfun[n]='\0';
+          
           
           printf("Ingrese el nombre del estado de salida: ");           
           for(n=0;(string1[n] = getchar())!='\n';n++){};
@@ -409,28 +407,31 @@ int main(int argc, char **argv){
           for(n=0;(string2[n] = getchar())!='\n';n++){};
           string2[n]='\0';
           
+          printf("Ingrese el nombre del evento: ");
+          
+          for(n=0;(string3[n] = getchar())!='\n';n++){};
+          string3[n]='\0';
+          
           for(n=0;n<contadordefunciones;n++){
-              printf("%d\n",strcmp(string1,leerestado((leerfuncion(n,listadetransiciones)->origin),listadeestados)->name));
-              printf("%d\n",strcmp(string2,leerestado((leerfuncion(n,listadetransiciones)->destiny),listadeestados)->name));
+              //printf("%d\n",strcmp(string1,leerestado((leerfuncion(n,listadetransiciones)->origin),listadeestados)->name));
+              //printf("%d\n",strcmp(string2,leerestado((leerfuncion(n,listadetransiciones)->destiny),listadeestados)->name));
               if(strcmp(string1,leerestado((leerfuncion(n,listadetransiciones)->origin),listadeestados)->name)==0){
                   if(strcmp(string2,leerestado((leerfuncion(n,listadetransiciones)->destiny),listadeestados)->name)==0)
                   {
-                    char* p2char2=(char*)malloc(20);
-                    strcpy(p2char2,strfun);
-                    leerfuncion(n,listadetransiciones)->name = p2char2;
-                    printf("Su funcion es: %s\n",leerfuncion(n,listadetransiciones)->name);
-                    
+                    if(strcmp(string3,(leerfuncion(n,listadetransiciones)->event))==0)
+                    {
+                       (leerfuncion(n,listadetransiciones)->name)=NULL;
+                    }
                   }
               }
           }
-*/
           
           erasefunction = 0;                                       //para que se ejecute una sola vez cuando presione el boton
       }else if((newmakefile == 1)){        //en el caso de que se haya apretado el boton de hacer makefile
           printf("Se esta por generar el makefile! \n");
           createfsm(listadeestados, listadetransiciones, contadordeestados, contadordefunciones);
           createmakefile(listadeestados, listadetransiciones, contadordeestados, contadordefunciones);
-          printf("Disfrute de su máquina de estados personalizada. \n");
+          printf("Disfrute de su maquina de estados personalizada. \n");
           newmakefile = 0;                                       //para que se ejecute una sola vez cuando presione el boton
       }
  

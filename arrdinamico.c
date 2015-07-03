@@ -212,9 +212,9 @@ int createfsm(miestado* p2e, mifuncion* p2f, int cantestados, int cantfunciones)
             for (i=0;recorrer_fun!=NULL;recorrer_fun=recorrer_fun->next)
             {
                 if(recorrer_fun->origin==estado_actual->cont)
-                    fprintf(p2table, "\t{%s,%s,%s},\n",recorrer_fun->event, leerestado(recorrer_fun->destiny,p2e)->name, recorrer_fun->name);
+                    fprintf(p2table, "\t{""%s"",%s,%s},\n",recorrer_fun->event, leerestado(recorrer_fun->destiny,p2e)->name, recorrer_fun->name);
             }
-	    fprintf(p2table,"\t{FIN_TABLA,%s,reset_FSM}\n}\n\n", leerestado(0, p2e)->name);
+	    fprintf(p2table,"\t{FIN_TABLA,%s,reset_FSM}\n};\n\n", leerestado(0, p2e)->name);
             estado_actual=estado_actual->next;
             recorrer_fun=p2f;
             
