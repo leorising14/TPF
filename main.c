@@ -84,6 +84,7 @@ int main(int argc, char **argv){
    int contadordefunciones=0;
    int estadoactual=0;
    miestado* listadeestados = NULL;
+   miestado* listagenerica = NULL;
    mifuncion* listadetransiciones = NULL;
 
    if(!al_init()) {
@@ -357,9 +358,18 @@ int main(int argc, char **argv){
           newfunction = 0;                                       //para que se ejecute una sola vez cuando presione el boton
       }else if((erasestate == 1)){        //en el caso de que se haya apretado el boton de borrar estado
           printf("Borre estado \n");
-          if(estadoactual==0)
+          if(estadoactual==0){
+              listagenerica=listadeestados;
               listadeestados=listadeestados->next;
-          else
+              free(listagenerica->name);
+              free(listagenerica);
+              listagenerica=listadeestados;
+              for(n=0;(listagenerica->next)!=NULL;listagenerica=listagenerica->next){
+                  listagenerica->cont=n;
+                  n++;
+              }
+              listagenerica->cont=n;
+          }else
               delblock(estadoactual,listadeestados);
           
           contadordeestados--;
@@ -398,6 +408,8 @@ int main(int argc, char **argv){
                      al_draw_line(xi,yi,xf,yf,myArrowColor,4);
                      al_draw_filled_triangle(px1,py1,px2,py2,px2-10*cos(-M_PI_2+atan2((yf-yi),(xf-xi))),py2-ARROW_HEIGHT/2*sin(-M_PI_2+atan2((yf-yi),(xf-xi))),myArrowColor);  //dibujo la flecha mediante dos triangulos
                      al_draw_filled_triangle(px1,py1,px2,py2,px2+10*cos(-M_PI_2+atan2((yf-yi),(xf-xi))),py2+ARROW_HEIGHT/2*sin(-M_PI_2+atan2((yf-yi),(xf-xi))),myArrowColor);
+                     al_draw_text(font,MYBLACK,(xi+xf)/2,(yi+yf)/2,ALLEGRO_ALIGN_CENTER,leerfuncion(n,listadetransiciones)->name);
+                     al_draw_text(font,MYBLACK,xi+IMG_SIZE/2,yi+IMG_SIZE/2,ALLEGRO_ALIGN_LEFT,leerfuncion(n,listadetransiciones)->event);
              }
           } 
          
@@ -405,7 +417,7 @@ int main(int argc, char **argv){
          {
              for(n=0;n<contadordeestados;n++){          //dibujo todos los estados en la pantalla: en el caso que dos estados se superpongan, tiene prioridad el mas recientemente creado para mostrarse ya que fue el ultimo en dibujarse (lo mismo se aplica para moverlo)
                 al_draw_bitmap(leerestado(n,listadeestados)->estadoimg, leerestado(n,listadeestados)->estado_x, leerestado(n,listadeestados)->estado_y, 0);
-                al_draw_text(font,MYWHITE,leerestado(n,listadeestados)->estado_x+35, leerestado(n,listadeestados)->estado_y+35, ALLEGRO_ALIGN_CENTER, leerestado(n,listadeestados)->name);
+                al_draw_text(font,MYWHITE,leerestado(n,listadeestados)->estado_x+IMG_SIZE/2, leerestado(n,listadeestados)->estado_y+IMG_SIZE/2-10, ALLEGRO_ALIGN_CENTER, leerestado(n,listadeestados)->name);
              } 
          }
  

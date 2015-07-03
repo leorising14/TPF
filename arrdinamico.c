@@ -89,10 +89,23 @@ miestado* ultimoestado(miestado *p2state)
 }
 
 void delblock(int num_of_block_to_del,miestado *lista){
-    int i=num_of_block_to_del;
-    
-    miestado *recorrer=lista;
+/*
+    if(num_of_block_to_del==0){
+        lista=lista->next;
+        recorrer = lista;
+        lista=lista->next;
+        anterior = lista;
+        free(recorrer);
+        for(i=0;(anterior->next)!=NULL;anterior=anterior->next){
+            anterior->cont=i;
+            i++;
+        }
+        
+    }else{
+*/
+    miestado *recorrer=lista; 
     miestado *anterior=lista;
+    int i=num_of_block_to_del;
     for (;(recorrer->cont)<(num_of_block_to_del-1);recorrer=recorrer->next){}
     anterior=recorrer;
     recorrer=recorrer->next;  
@@ -102,8 +115,12 @@ void delblock(int num_of_block_to_del,miestado *lista){
         i++;
     }
     anterior->cont=i;               //seteo el contador en el ultimo que no es considerado
+    free(recorrer->name);
     free(recorrer);
     
+/*
+    }    
+*/
 }
 
 

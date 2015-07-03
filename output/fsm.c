@@ -1,51 +1,31 @@
 #include<stdio.h>
 #include"fsm.h"
 
-extern STATE D[];
-extern STATE a[];
-extern STATE n[];
-extern STATE i[];
+extern STATE hola[];
+extern STATE nuevo[];
 
 
-void f1 (void);
-void f2 (void);
-void f3 (void);
-void (null) (void);
-void (null) (void);
 void (null) (void);
 void reset_FSM (void);
 
 
-STATE D[]=
+STATE hola[]=
 {
-	{pas1,a,f1},
-	{FIN_TABLA,D,reset_FSM}
+	{5,nuevo,(null)},
+	{FIN_TABLA,hola,reset_FSM}
 }
 
-STATE a[]=
+STATE nuevo[]=
 {
-	{pas2,n,f2},
-	{reset,D,(null)},
-	{FIN_TABLA,D,reset_FSM}
-}
-
-STATE n[]=
-{
-	{pas3,i,f3},
-	{reset,D,(null)},
-	{FIN_TABLA,D,reset_FSM}
-}
-
-STATE i[]=
-{
-	{reset,D,(null)},
-	{FIN_TABLA,D,reset_FSM}
+	{FIN_TABLA,hola,reset_FSM}
 }
 
 void reset_FSM (void)
 {
 	printf("Reset");
-}STATE* FSM_GetInitState(void)
+}
+
+STATE* FSM_GetInitState(void)
 {
-	return (D);
+	return (hola);
 }
