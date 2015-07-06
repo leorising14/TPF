@@ -29,6 +29,7 @@ Grupo Nº 2:
 
 #include "arrdinamico.h"
 #include "createfiles.h"
+#include "allegrogetchar.h"
 
 const float FPS = 60;
 const int SCREEN_W = 1000;                                  //tamaño de la pantalla
@@ -64,12 +65,16 @@ int main(int argc, char **argv){
    bool redraw = true;
    bool doexit = false;
 
-   char mimensaje1[]={"Ingrese el nombre del estado (no puede ser solo un numero "}; //strings que uso para mostrar mensajes en pantalla y escribir
+   char mimensaje1[]={"Ingrese el nombre del estado"}; //strings que uso para mostrar mensajes en pantalla y escribir
    char mimensaje2[]={"Ingrese el nombre del evento "};
-   char mimensaje3[]={"Ingrese el nombre de la funcion: "};
+   char mimensaje3[]={"Ingrese el nombre de la funcion "};
    char mimensaje4[]={"Ingrese el nombre del estado de salida "};
    char mimensaje5[]={"Ingrese el nombre del estado de llegada "};
    char mimensaje6[]={"Ingrese el nombre del evento a borrar "};
+   char mimensaje7[]={"Ingrese el nombre del estado a borrar "};
+   char textbox[]={"Aqui se veran las acciones "};
+
+   
    char* strfun;
    char* string1;
    char* string2;
@@ -280,6 +285,7 @@ int main(int argc, char **argv){
                break;              
           }
       }else if((newstate == 1)){        //en el caso de que se haya apretado el boton de agregar estado
+          
           printf("Agregue estado\n");
           var=1;                        //esto es para que luego no dibuje cuando se ejecute el programa
 
@@ -297,7 +303,7 @@ int main(int argc, char **argv){
           }
           
           printf("Ingrese el nombre del estado: "); //mensaje1
-          strfun = getcharallegro(display,font,mimensaje1);
+          strfun = (char *) getcharallegro(display,font,mimensaje1);
 /*
           for(n=0;(strfun[n] = getchar())!='\n';n++){};
           strfun[n]='\0';
@@ -312,6 +318,7 @@ int main(int argc, char **argv){
           
           contadordeestados++;
           newstate=0;                                       //para que se ejecute una sola vez cuando presione el boton
+          strcpy(textbox,"Agregue estado");
       }else if((newtransicion == 1) && (origentransicion != -1) && (destinotransicion != -1)){         //en el caso de que se haya apretado el boton de agregar transicion, y se hayan apretado los dos estados a unir
           printf("Aregue transicion\n");
           printf("El origen de la transicion es: %d\n", origentransicion);
@@ -324,30 +331,29 @@ int main(int argc, char **argv){
           
           printf("Ingrese el nombre del evento: "); //mensaje2
           
-          strfun = getcharallegro(display,font,mimensaje2);
+          strfun = (char *) getcharallegro(display,font,mimensaje2);
           
           char* p2char=(char*)malloc(20);
           strcpy(p2char,strfun);
           leerfuncion(contadordefunciones,listadetransiciones)->event=p2char;
           
-          
           newtransicion = 0;                                       //para que se ejecute una sola vez cuando presione el boton
           origentransicion = -1;                                    //vuelvo al valor default de origen y destino
           destinotransicion = -1;
-          
-          
           contadordefunciones++;
+          
+          strcpy(textbox,"Agregue transicion");
       }else if((newfunction == 1)){        //en el caso de que se haya apretado el boton de agregar funcion
           printf("Agregue funcion\n");
           printf("Ingrese el nombre de la funcion: ");           
-          strfun = getcharallegro(display,font,mimensaje3);
+          strfun = (char *) getcharallegro(display,font,mimensaje3);
           
           printf("Ingrese el nombre del estado de salida: ");           
-          string1 = getcharallegro(display,font,mimensaje4);
+          string1 = (char *)getcharallegro(display,font,mimensaje4);
           
           printf("Ingrese el nombre del estado de llegada: ");           
 
-          string2 = getcharallegro(display,font,mimensaje5);
+          string2 = (char *) getcharallegro(display,font,mimensaje5);
           
           for(n=0;n<contadordefunciones;n++){
               //printf("%d\n",strcmp(string1,leerestado((leerfuncion(n,listadetransiciones)->origin),listadeestados)->name));
@@ -359,15 +365,28 @@ int main(int argc, char **argv){
                     strcpy(p2char2,strfun);
                     leerfuncion(n,listadetransiciones)->name = p2char2;
                     printf("Su funcion es: %s\n",leerfuncion(n,listadetransiciones)->name);
-                    
                   }
-              }else printf("No se pudo crear la función porque no hay coincidencia con los nombres de los estados");
+                  strcpy(textbox,"Agregue funcion");                  
+              }else{
+                  printf("No se pudo crear la función porque no hay coincidencia con los nombres de los estados");
+                  strcpy(textbox,"No se pudo crear la función porque no hay coincidencia con los nombres de los estados");               
+              }
           }
 
           newfunction = 0;                                       //para que se ejecute una sola vez cuando presione el boton
+
       }else if((erasestate == 1)){        //en el caso de que se haya apretado el boton de borrar estado
           printf("Borre estado \n");
-          listadeestados=quitarestado(estadoactual,listadeestados); //me regresa el puntero nuevo de listadeestados (esto por si se elimina el primer estado)     
+          
+          string1 = (char *)getcharallegro(display,font,mimensaje7);
+          
+          for(n=0;n<contadordeestados;n++){
+              if(strcmp((leerestado(n,listadeestados)->name), string1) == 0){
+                  
+                listadeestados=quitarestado(n,listadeestados);  //me regresa el puntero nuevo de listadeestados (esto por si se elimina el primer estado)
+                n=contadordeestados;
+              }
+          }
           
           for(n=0;n<contadordefunciones;n++){
               if((leerfuncion(n,listadetransiciones)->origin == estadoactual) || (leerfuncion(n,listadetransiciones)->destiny == estadoactual)){
@@ -386,14 +405,13 @@ int main(int argc, char **argv){
           }
 
           contadordeestados--;                                  //como se borro un estado, tengo uno menos!
-          
           erasestate = 0;                                       //para que se ejecute una sola vez cuando presione el boton
+          strcpy(textbox,"Borre estado");
       }else if((erasetransicion == 1) && (origentransicion != -1) && (destinotransicion != -1)){        //en el caso de que se haya apretado el boton de borrar transicion
           printf("Borre transicion \n");
           
           printf("Ingrese el nombre del evento a borrar: ");
-          
-          strfun = getcharallegro(display,font, mimensaje6);
+          strfun = (char *) getcharallegro(display,font, mimensaje6);
           
           i=contadordefunciones;
           for(n=0;n<contadordefunciones;n++){
@@ -406,6 +424,9 @@ int main(int argc, char **argv){
           
           if(i==contadordefunciones){
               printf("Ud selecciono dos estados que no tienen transicion entre si, o un evento invalido. Intentelo nuevamente \n");
+              strcpy(textbox,"Ud selecciono dos estados que no tienen transicion entre si, o un evento invalido. Intentelo nuevamente");
+          }else{          
+              strcpy(textbox,"Borre transicion"); 
           }
     
           erasetransicion = 0;                                       //para que se ejecute una sola vez cuando presione el boton
@@ -416,16 +437,11 @@ int main(int argc, char **argv){
           
           
           printf("Ingrese el nombre del estado de salida: ");           
-
-          string1 = getcharallegro(display,font, mimensaje4);
-          
+          string1 = (char *) getcharallegro(display,font, mimensaje4);
           printf("Ingrese el nombre del estado de llegada: ");           
-
-          string2 = getcharallegro(display,font, mimensaje5);
-          
+          string2 = (char *) getcharallegro(display,font, mimensaje5);
           printf("Ingrese el nombre del evento: ");
-          
-          string3 = getcharallegro(display,font, mimensaje2);
+          string3 = (char *) getcharallegro(display,font, mimensaje2);
           
           for(n=0;n<contadordefunciones;n++){
               //printf("%d\n",strcmp(string1,leerestado((leerfuncion(n,listadetransiciones)->origin),listadeestados)->name));
@@ -442,12 +458,14 @@ int main(int argc, char **argv){
           }
           
           erasefunction = 0;                                       //para que se ejecute una sola vez cuando presione el boton
+          strcpy(textbox,"Borre funcion");   
       }else if((newmakefile == 1)){        //en el caso de que se haya apretado el boton de hacer makefile
           printf("Se esta por generar el makefile! \n");
           createfsm(listadeestados, listadetransiciones, contadordeestados, contadordefunciones);
           createmakefile(listadeestados, listadetransiciones, contadordeestados, contadordefunciones);
           printf("Disfrute de su maquina de estados personalizada. \n");
           newmakefile = 0;                                       //para que se ejecute una sola vez cuando presione el boton
+          strcpy(textbox,"Se ha generado el makefile");
       }
  
       if(redraw && al_is_event_queue_empty(event_queue)) {
@@ -489,6 +507,8 @@ int main(int argc, char **argv){
          al_draw_bitmap(borrartransicion, BUTTONS_COLUMN, BUTTON5_FILE, 0);
          al_draw_bitmap(borrarfuncion, BUTTONS_COLUMN, BUTTON6_FILE, 0);         
          al_draw_bitmap(makefile, BUTTONS_COLUMN, BUTTON_MAKEFILE_FILE, 0);
+         
+         al_draw_text(font, MYBLACK, 30, SCREEN_H-40, ALLEGRO_ALIGN_LEFT, textbox);
          
          //al_draw_spline(spline,al_map_rgb(255,0,0),2);
          

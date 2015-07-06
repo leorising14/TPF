@@ -1,24 +1,26 @@
 #include<stdio.h>
 #include"fsm.h"
 
-extern STATE estado1[];
-extern STATE estado2[];
+extern STATE ev1[];
+extern STATE ev2[];
 
 
-void donothing (void);
+void (null) (void);
+void (null) (void);
 void reset_FSM (void);
+void donothing (void);
 
 
-STATE estado1[]=
+STATE ev1[]=
 {
-	{"A",estado2,donothing},
-	{FIN_TABLA,estado1,reset_FSM}
+	{"ev",ev2,donothing},
+	{FIN_TABLA,ev1,reset_FSM}
 };
 
-STATE estado2[]=
+STATE ev2[]=
 {
-	{"B",estado1,donothing},
-	{FIN_TABLA,estado1,reset_FSM}
+	{"ev",ev1,donothing},
+	{FIN_TABLA,ev1,reset_FSM}
 };
 
 void reset_FSM (void)
@@ -28,5 +30,10 @@ void reset_FSM (void)
 
 STATE* FSM_GetInitState(void)
 {
-	return (estado1);
+	return (ev1);
 }
+void donothing (void)
+{
+	return;
+}
+

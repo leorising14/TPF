@@ -1,2 +1,21 @@
-ppal: ppal.c fsm.c fsm.h fsmtable.c contador.c contador.h termlib.c termlib.h donothing.c 
-	gcc -o ppal ppal.c fsm.c fsmtable.c contador.c termlib.c donothing.c
+fsm: ppal.o fsm.o fsmtable.o contador.o termlib.o donothing.o 
+	gcc -o fsm ppal.o fsm.o fsmtable.o contador.o termlib.o donothing.o 
+
+ppal.o: ppal.c
+	gcc -c ppal.c
+
+fsm.o: fsm.c fsm.h
+	gcc -c fsm.c
+
+contador.o: contador.c contador.h
+	gcc -c ppal.c
+
+termlib.o: termlib.c termlib.h
+	gcc -c termlib.c
+
+fsmtable.o: fsmtable.c
+	gcc -c fsmtable.c
+
+donothing.o: donothing.c
+	gcc -c donothing.c
+
