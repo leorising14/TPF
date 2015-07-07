@@ -6,7 +6,7 @@
 
  #include "allegrogetchar.h"
 
-char* getcharallegro(ALLEGRO_DISPLAY* d, ALLEGRO_FONT *fuente, char* str2)   
+char* getcharallegro(ALLEGRO_DISPLAY* d, ALLEGRO_FONT *fuente, char* str2)  //para levantar el input de entrada 
 {   
     ALLEGRO_DISPLAY* displayauxiliar = NULL;
     displayauxiliar = al_create_display(SCREEN_W/2,SCREEN_H/2);

@@ -1,5 +1,5 @@
-fsm: ppal.o fsm.o fsmtable.o contador.o termlib.o donothing.o 
-	gcc -o fsm ppal.o fsm.o fsmtable.o contador.o termlib.o donothing.o 
+fsm: ppal.o fsm.o fsmtable.o contador.o termlib.o donothing.o match.o 
+	gcc -o fsm ppal.o fsm.o fsmtable.o contador.o termlib.o donothing.o match.o 
 
 ppal.o: ppal.c
 	gcc -c ppal.c
@@ -18,4 +18,7 @@ fsmtable.o: fsmtable.c
 
 donothing.o: donothing.c
 	gcc -c donothing.c
+
+match.o: match.c
+	gcc -c match.c
 
