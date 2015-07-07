@@ -14,6 +14,7 @@ struct estado{
     float estado_y;
     ALLEGRO_BITMAP *estadoimg;
     int cont;
+    int check; //chequea si tiene alguna conexion entre otro estado
     char* name;
     miestado *next;
 };

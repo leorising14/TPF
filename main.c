@@ -59,6 +59,7 @@ int main(int argc, char **argv){
    ALLEGRO_BITMAP *borrarfuncion = NULL;
    ALLEGRO_BITMAP *makefile = NULL;
    ALLEGRO_BITMAP *arrow = NULL;
+   ALLEGRO_BITMAP *info = NULL;
    ALLEGRO_EVENT_QUEUE *event_queue = NULL;
    ALLEGRO_TIMER *timer = NULL;
    
@@ -90,6 +91,7 @@ int main(int argc, char **argv){
    int erasetransicion = 0;
    int erasefunction = 0;
    int newmakefile = 0;
+   int openinfo = 0;
    
    int xf=0;                          //Variables que me simplifican MUCHISIMO dibujar las lineas, los splines y las flechas
    int xi=0;
@@ -168,8 +170,9 @@ int main(int argc, char **argv){
    borrartransicion = al_load_bitmap("borrartransicion.png");
    makefile = al_load_bitmap("makefile.png");
    arrow = al_load_bitmap("arrow.png");
+   info = al_load_bitmap("info.png");
    
-   if(!nuevoestado || !nuevafuncion || !nuevatransicion || !borrarestado || !borrarfuncion || !borrartransicion || !makefile || !arrow) {
+   if(!nuevoestado || !nuevafuncion || !nuevatransicion || !borrarestado || !borrarfuncion || !borrartransicion || !makefile || !arrow || !info) {
       fprintf(stderr, "No se pudieron crear los bitmaps!\n");
       al_destroy_display(display);
       al_destroy_timer(timer);
@@ -267,7 +270,11 @@ int main(int argc, char **argv){
        
        if(((ev.mouse.x)<(BUTTONS_COLUMN+BUTTON_SIZE_W)) && (((ev.mouse.y)<(BUTTON_MAKEFILE_FILE+BUTTON_SIZE_H+30))) && ((BUTTONS_COLUMN)<ev.mouse.x) && ((BUTTON_MAKEFILE_FILE)<ev.mouse.y)){
             newmakefile = 1;
-       }              
+       }     
+       
+       if(((ev.mouse.x)<(SCREEN_W-80+50)) && (((ev.mouse.y)<(53))) && ((SCREEN_W-80)<ev.mouse.x) && ((3)<ev.mouse.y)){
+            openinfo = 1;
+       } 
        
       }else if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP){
           mousestate = 0;
@@ -294,6 +301,7 @@ int main(int argc, char **argv){
           (leerestado(contadordeestados,listadeestados))->estado_y = SCREEN_H / 2.0 - IMG_SIZE / 2.0;
           (leerestado(contadordeestados,listadeestados))->estadoimg = al_load_bitmap("estado1.png");
           (leerestado(contadordeestados,listadeestados))->cont = contadordeestados;
+          leerestado(contadordeestados,listadeestados)->check = 0;
           
           if(!(leerestado(contadordeestados,listadeestados))->estadoimg){   //si no se encuentra la imagen del puntero, mando un mensaje de error
             fprintf(stderr, "No se pudo crear el bitmap!\n");
@@ -324,15 +332,17 @@ int main(int argc, char **argv){
           printf("El origen de la transicion es: %d\n", origentransicion);
           printf("El destino de la transicion es: %d\n", destinotransicion);
           
+          (leerestado(origentransicion,listadeestados)->check)++;
+          (leerestado(destinotransicion,listadeestados)->check)++;
+          
           agregarfuncion(&listadetransiciones);
           leerfuncion(contadordefunciones,listadetransiciones)->origin = origentransicion;
           leerfuncion(contadordefunciones,listadetransiciones)->destiny = destinotransicion;
           leerfuncion(contadordefunciones,listadetransiciones)->cont = contadordefunciones;
           
           printf("Ingrese el nombre del evento: "); //mensaje2
-          
+         
           strfun = (char *) getcharallegro(display,font,mimensaje2);
-          
           char* p2char=(char*)malloc(20);
           strcpy(p2char,strfun);
           leerfuncion(contadordefunciones,listadetransiciones)->event=p2char;
@@ -413,6 +423,9 @@ int main(int argc, char **argv){
           printf("Ingrese el nombre del evento a borrar: ");
           strfun = (char *) getcharallegro(display,font, mimensaje6);
           
+          (leerestado(origentransicion,listadeestados)->check)++;
+          (leerestado(destinotransicion,listadeestados)->check)--;
+          
           i=contadordefunciones;
           for(n=0;n<contadordefunciones;n++){
               if(((leerfuncion(n,listadetransiciones)->origin)==origentransicion) && ((leerfuncion(n,listadetransiciones)->destiny)==destinotransicion) && ((strcmp(strfun,leerfuncion(n,listadetransiciones)->event))==0)){
@@ -461,11 +474,26 @@ int main(int argc, char **argv){
           strcpy(textbox,"Borre funcion");   
       }else if((newmakefile == 1)){        //en el caso de que se haya apretado el boton de hacer makefile
           printf("Se esta por generar el makefile! \n");
-          createfsm(listadeestados, listadetransiciones, contadordeestados, contadordefunciones);
-          createmakefile(listadeestados, listadetransiciones, contadordeestados, contadordefunciones);
-          printf("Disfrute de su maquina de estados personalizada. \n");
+          i=0;
+          for(n=0;n<contadordeestados;n++){
+              if((leerestado(n,listadeestados)->check)==0){
+                  i=1;
+              }
+          }
+          if(i==0){
+            createfsm(listadeestados, listadetransiciones, contadordeestados, contadordefunciones);
+            createmakefile(listadeestados, listadetransiciones, contadordeestados, contadordefunciones);
+            printf("Disfrute de su maquina de estados personalizada. \n");
+            strcpy(textbox,"Se ha generado el makefile");
+          }else{
+             strcpy(textbox,"No ha conectado todos los estados, intente de nuevo.");
+          }
           newmakefile = 0;                                       //para que se ejecute una sola vez cuando presione el boton
-          strcpy(textbox,"Se ha generado el makefile");
+
+      }else if(openinfo == 1){
+          printf("Abriendo las instrucciones \n");     
+          openinfo = 0;
+          openinstructions(display, font);
       }
  
       if(redraw && al_is_event_queue_empty(event_queue)) {
@@ -507,6 +535,7 @@ int main(int argc, char **argv){
          al_draw_bitmap(borrartransicion, BUTTONS_COLUMN, BUTTON5_FILE, 0);
          al_draw_bitmap(borrarfuncion, BUTTONS_COLUMN, BUTTON6_FILE, 0);         
          al_draw_bitmap(makefile, BUTTONS_COLUMN, BUTTON_MAKEFILE_FILE, 0);
+         al_draw_bitmap(info, SCREEN_W-80, 3, 0);
          
          al_draw_text(font, MYBLACK, 30, SCREEN_H-40, ALLEGRO_ALIGN_LEFT, textbox);
          
