@@ -8,7 +8,7 @@ fsm.o: fsm.c fsm.h
 	gcc -c fsm.c
 
 contador.o: contador.c contador.h
-	gcc -c ppal.c
+	gcc -c contador.c
 
 termlib.o: termlib.c termlib.h
 	gcc -c termlib.c

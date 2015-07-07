@@ -43,6 +43,7 @@ int createfsm(miestado* p2e, mifuncion* p2f, int cantestados, int cantfunciones)
         
         for(i=0;i<cantfunciones;i++)
         {
+            if(recorrer_fun->name!= NULL)
             fprintf(p2table,"void %s (void);\n",recorrer_fun->name);
             recorrer_fun=recorrer_fun->next;
         }
@@ -61,9 +62,9 @@ int createfsm(miestado* p2e, mifuncion* p2f, int cantestados, int cantfunciones)
             {
                 if(recorrer_fun->origin==estado_actual->cont)
 		    if(recorrer_fun->name!=NULL)
-                	fprintf(p2table, "\t{\"%s\",%s,%s},\n",recorrer_fun->event, leerestado(recorrer_fun->destiny,p2e)->name, recorrer_fun->name);
+                	fprintf(p2table, "\t{'%s',%s,%s},\n",recorrer_fun->event, leerestado(recorrer_fun->destiny,p2e)->name, recorrer_fun->name);
 		    else
-                	fprintf(p2table, "\t{\"%s\",%s,donothing},\n",recorrer_fun->event, leerestado(recorrer_fun->destiny,p2e)->name);
+                	fprintf(p2table, "\t{'%s',%s,donothing},\n",recorrer_fun->event, leerestado(recorrer_fun->destiny,p2e)->name);
             }
 	    fprintf(p2table,"\t{FIN_TABLA,%s,reset_FSM}\n};\n\n", leerestado(0, p2e)->name);
             estado_actual=estado_actual->next;
@@ -73,9 +74,9 @@ int createfsm(miestado* p2e, mifuncion* p2f, int cantestados, int cantfunciones)
                 running=0;
         }
         
-        fprintf(p2table, "void reset_FSM (void)\n{\n\tprintf(\"Reset\");\n}\n\n");
+        fprintf(p2table, "void reset_FSM (void)\n{\n\tprintf(\"Reset\\n\");\n}\n\n");
         fprintf(p2table, "STATE* FSM_GetInitState(void)\n{\n\treturn (%s);\n}\n", p2e->name);
-        fprintf(p2table, "void donothing (void)\n{\n\treturn;\n}\n\n");
+        //fprintf(p2table, "void donothing (void)\n{\n\treturn;\n}\n\n");
         fclose(p2table);
         
         return 0;
@@ -114,7 +115,7 @@ int createmakefile (miestado* p2e, mifuncion* p2f, int cantestados, int cantfunc
    
    fprintf(p2makefile, "\n\nppal.o: ppal.c\n\tgcc -c ppal.c\n\n");
    fprintf(p2makefile, "fsm.o: fsm.c fsm.h\n\tgcc -c fsm.c\n\n");
-   fprintf(p2makefile, "contador.o: contador.c contador.h\n\tgcc -c ppal.c\n\n");
+   fprintf(p2makefile, "contador.o: contador.c contador.h\n\tgcc -c contador.c\n\n");
    fprintf(p2makefile, "termlib.o: termlib.c termlib.h\n\tgcc -c termlib.c\n\n");
    fprintf(p2makefile, "fsmtable.o: fsmtable.c\n\tgcc -c fsmtable.c\n\n");
    fprintf(p2makefile, "donothing.o: donothing.c\n\tgcc -c donothing.c\n\n");

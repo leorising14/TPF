@@ -24,7 +24,7 @@ int main (void)
 	
 	p2state=fsm(p2state,evento);      //Se lo paso a la maquina de estados
 
-	printf("Total de coincidencias: %d\n\n", leer_cont());
+	printf("Total de coincidencias: %d", leer_cont());
   	getchar();
 
     

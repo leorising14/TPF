@@ -1,33 +1,93 @@
 #include<stdio.h>
 #include"fsm.h"
 
+extern STATE estado0[];
 extern STATE estado1[];
 extern STATE estado2[];
+extern STATE estado3[];
+extern STATE estado1R[];
+extern STATE estado1C[];
+extern STATE estado2R[];
+extern STATE estado3R[];
+extern STATE estado2C[];
+extern STATE estado3C[];
 
 
-void hola (void);
-void func21 (void);
+void match (void);
+void match (void);
+void match (void);
 void reset_FSM (void);
+void donothing (void);
 
+
+STATE estado0[]=
+{
+	{'D',estado1,donothing},
+	{'R',estado1R,donothing},
+	{'C',estado1C,donothing},
+	{FIN_TABLA,estado0,reset_FSM}
+};
 
 STATE estado1[]=
 {
-	{"A",estado2,hola},
-	{FIN_TABLA,estado1,reset_FSM}
+	{'a',estado2,donothing},
+	{FIN_TABLA,estado0,reset_FSM}
 };
 
 STATE estado2[]=
 {
-	{"B",estado1,func21},
-	{FIN_TABLA,estado1,reset_FSM}
+	{'n',estado3,donothing},
+	{FIN_TABLA,estado0,reset_FSM}
+};
+
+STATE estado3[]=
+{
+	{'i',estado0,match},
+	{FIN_TABLA,estado0,reset_FSM}
+};
+
+STATE estado1R[]=
+{
+	{'i',estado2R,donothing},
+	{FIN_TABLA,estado0,reset_FSM}
+};
+
+STATE estado1C[]=
+{
+	{'l',estado2C,donothing},
+	{FIN_TABLA,estado0,reset_FSM}
+};
+
+STATE estado2R[]=
+{
+	{'c',estado3R,donothing},
+	{FIN_TABLA,estado0,reset_FSM}
+};
+
+STATE estado3R[]=
+{
+	{'h',estado0,match},
+	{FIN_TABLA,estado0,reset_FSM}
+};
+
+STATE estado2C[]=
+{
+	{'e',estado3C,donothing},
+	{FIN_TABLA,estado0,reset_FSM}
+};
+
+STATE estado3C[]=
+{
+	{'m',estado0,match},
+	{FIN_TABLA,estado0,reset_FSM}
 };
 
 void reset_FSM (void)
 {
-	printf("Reset");
+	printf("Reset\n");
 }
 
 STATE* FSM_GetInitState(void)
 {
-	return (estado1);
+	return (estado0);
 }
